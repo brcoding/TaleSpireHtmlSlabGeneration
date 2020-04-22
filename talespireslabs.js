@@ -13,7 +13,14 @@
 var script = document.createElement("script");
 script.src = 'assetdata.js';
 document.head.appendChild(script);
-
+// Needed for gzip inflate / deflate of paste strings
+var script = document.createElement("script");
+script.src = 'https://cdn.jsdelivr.net/pako/1.0.3/pako.min.js';
+document.head.appendChild(script);
+// Math package for vector math
+var script = document.createElement("script");
+script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.6.4/math.min.js';
+document.head.appendChild(script);
 
 var TalespireSlabs = (function () {
 
