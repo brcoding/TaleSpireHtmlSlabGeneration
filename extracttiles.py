@@ -15,9 +15,8 @@ for root,d_names,f_names in os.walk(path):
             continue
         filename = os.path.join(root, f)
         with open(filename, encoding='utf-8', mode='r') as currentFile:
-            data = "\n".join(currentFile.readlines()[1:])
-            #data=currentFile.read().replace('\n', '')
-            asset = json.loads(data)
+            currentFile.readline()
+            asset = json.loads(currentFile.read())
             nguid = asset["GUID"]
             asset_name = asset["boardAssetName"]
             width = asset["assetLoaders"][0]["occluderInfo"]["Width"]

@@ -140,7 +140,7 @@ var TalespireSlabs = (function () {
                 unionMax[0] = Math.max(max[0], unionMax[0]);
                 unionMax[1] = Math.max(max[1], unionMax[1]);
                 unionMax[2] = Math.max(max[2], unionMax[2]);
-                console.log(unionMin, unionMax);
+                //console.log(unionMin, unionMax);
 
             });
         });
@@ -330,9 +330,6 @@ var TalespireSlabs = (function () {
         } catch {
             throw "Unable to inflate gzip contents. Cannot read slab."
         }
-
-        // Convert gunzipped byteArray back to ascii string:
-        var strData     = String.fromCharCode.apply(null, new Uint16Array(data));
 
         return ReadSlab(data);
     }
