@@ -1,10 +1,9 @@
 <html>
 <head>
     <title>Forest Generator</title>
-
+    <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAiPFoAAAAAAES7lQBDwJIAP8CVADzAkAA/v5kAQr+RAB48WwBEv5EAN8GSACA8WwA7wJMAV7yeAEyzlwBGvpUASb+ZAD6/kgAhO10AP76WADHCjQCT1sQAPcGTAEvDnQAkPVsAMUVeAEm7lwA4wZEAPMCSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQsYCwEBAQEBAQEBAQEBAQEBEgEBAQEBAQEBAQEBAQEBAQsBAQEBAQEBAQEBAQEBAQEZAQEBAQEBAQEBAQEXHBwBAAEcHAEBAQEBAQEJHBwcFAsVHBwcFgEBAQERHBwcHBwIHBwMHBwcAQEBDBwcHBMcHBwCHBwcBgEBAQQKHAUcHBwOHBwcEAEBAQEBGxwcHBwcGhwcHBwBAQEBARwNHBwcDxwcHBwBAQEBAQEcHBwcHBwcHBwHAQEBAQEBARwcHBwcHBwcAQEBAQEBAQEBHBwcHBwcAQEBAQEBAQEBAQEBHBwDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf4/AAD/fwAA/38AAP9/AADxTwAA4AMAAMABAADAAQAAwAMAAOADAADgBwAA4AcAAPAPAAD4HwAA/j8AAP//AAA=" rel="icon" type="image/x-icon" />
     <!-- Local asset data -->    
     <script src="talespireslabs.js"></script>
-    <script src="pregenforest.js"></script>
 
     <style>
         body {
@@ -158,78 +157,6 @@
         }
     </style>
     <script>
-
-
-    create_payload = [
-    {
-        'nguid': 'ed9bc853-bed5-443c-b45f-a7133d55011a', 
-        'assets': [
-            {
-                'rotation': 4, 
-                'bounds': 
-                {
-                    'center': {'x': 1, 'y': 1, 'z': 1}, 
-                    'extents': {'x': 1, 'y': 1, 'z': 1}
-                }
-            },
-            {
-                'rotation': 4, 
-                'bounds': 
-                {
-                    'center': {'x': 3, 'y': 1, 'z': 3}, 
-                    'extents': {'x': 1, 'y': 1, 'z': 1}
-                }
-            }
-        ]
-    }
-    ]
-
-    test_create_payload = [
-    {
-        'nguid': '01c3a210-94fb-449f-8c47-993eda3e7126', 
-        'assets': [
-            {
-                'rotation': 4, 
-                'bounds': 
-                {
-                    'center': {'x': 3, 'y': 6, 'z': 9}, 
-                    'extents': {'x': 2, 'y': 5, 'z': 8}
-                }
-            },
-            {
-                'rotation': 2, 
-                'bounds': 
-                {
-                    'center': {'x': 1.5, 'y': 1.6, 'z': 1.7}, 
-                    'extents': {'x': 2.1, 'y': 2.2, 'z': 2.3}
-                }
-            }
-        ]
-    },
-    {
-        'nguid': 'd5b7910a-ae06-4ad3-91f6-cbbd8782bbea', 
-        'assets': [
-            {
-                'rotation': 0, 
-                'bounds': 
-                {
-                    'center': {'x': 1, 'y': 1, 'z': 1}, 
-                    'extents': {'x': 2, 'y': 2, 'z': 2}
-                }
-            },
-            {
-                'rotation': 2, 
-                'bounds': 
-                {
-                    'center': {'x': 0, 'y': 0, 'z': 0}, 
-                    'extents': {'x': 2.1, 'y': 2.2, 'z': 2.3}
-                }
-            }
-        ]
-    }    
-
-    ];
-
     function ShowError(errorMessage) {
         var x = document.getElementById("snackbar");
         x.innerHTML = errorMessage;
@@ -367,13 +294,6 @@
         printResults(TalespireSlabs.DecodeSlab(results));
     }    
 
-    function CreateSlab() {
-        clearPrintResults();
-        var results = TalespireSlabs.CreateSlab(create_payload);
-        document.getElementById("forest").value = results;
-        printResults(TalespireSlabs.DecodeSlab(results));
-    }
-
     function ReadSlab() {
         clearPrintResults();
         try {
@@ -394,7 +314,6 @@
             <button id="button" onclick = "WriteRandomForest();">Generate Random Forest</button>
             <button style="background: #66A" id="button" onclick="CopyToClipboard();">Copy To Clipboard</button>
             <button style="float: right; " id="button" onclick='ReadSlab();'>Read Pasted Slab</button>
-<!--             <button style="background: #66A" id="button" onclick="CreateSlab();">Create Slab</button> -->
         </div>        
         <h3>Slab Size</h3>
         <div class="slidecontainer">
