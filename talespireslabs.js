@@ -72,7 +72,7 @@ var TalespireSlabs = (function () {
 
     publicAPIs.CreateSlab = function(layouts=[]) { 
         // Create a large ArrayBuffer and DataView, We can slice what we don't need at the end.
-        var buffer = new ArrayBuffer(Math.pow(2, 18));
+        var buffer = new ArrayBuffer(Math.pow(2, 20));
         var bufferDataView = new DataView(buffer);
 
         // Write header
