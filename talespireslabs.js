@@ -146,8 +146,8 @@ var TalespireSlabs = (function () {
         });
         var unionCenterVector3 = math.multiply(0.5, math.add(unionMin, unionMax))
         var unionExtentsVector3 = math.multiply(0.5, math.subtract(unionMax, unionMin))
-        unionCenterVector3[0] = 1;
-        unionCenterVector3[2] = 1;
+        // unionCenterVector3[0] = 1;
+        // unionCenterVector3[2] = 1;
 
         bufferDataView.setFloat32(bufPtr, unionCenterVector3[0], true);
         bufPtr += 4;
