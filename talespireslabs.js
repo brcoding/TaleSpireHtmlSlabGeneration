@@ -23,10 +23,12 @@ var TalespireSlabs = (function () {
     var publicAPIs = {};    
     var outputElement;
 
-    var getAsset = function(nguid) {
-        console.log("Getting Asset:" + nguid);
-        console.log( asset_data[nguid])
+    publicAPIs.GetAsset = function(nguid) {
         return asset_data[nguid];
+    }
+
+    publicAPIs.GetAllAsset = function() {
+        return asset_data;
     }
 
     var toHexString = function(byteArray, withDash=false) {
@@ -156,7 +158,7 @@ var TalespireSlabs = (function () {
         return '```' + btoa(String.fromCharCode.apply(null, gzdata)) + '```';
     }
 
-    publicAPIs.ReadSlab = function(data) {
+    var ReadSlab = function(data) {
         var results = "";
         var decodedAssets = [];
         var bufPtr = 0;
@@ -269,7 +271,7 @@ var TalespireSlabs = (function () {
 
         var assetIdx = 0;
         for (i = 0; i < decodedAssets.length; i++) {
-            var asset = getAsset(decodedAssets[i]["nguid"]);
+            var asset = publicAPIs.GetAsset(decodedAssets[i]["nguid"]);
             if (asset) {
                 results += "<p><b>" + asset["name"] + "</b> NGuid: " + decodedAssets[i]["nguid"] + "</p>";
             } else {
@@ -309,7 +311,7 @@ var TalespireSlabs = (function () {
         // Convert gunzipped byteArray back to ascii string:
         var strData     = String.fromCharCode.apply(null, new Uint16Array(data));
 
-        return publicAPIs.ReadSlab(data);
+        return ReadSlab(data);
     }
 
     return publicAPIs;
