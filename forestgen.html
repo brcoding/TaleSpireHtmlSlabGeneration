@@ -7,11 +7,29 @@
     <script src="pregenforest.js"></script>
 
     <style>
+        body {
+            font-family: Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+        }
+        *, *:before, *:after {
+          box-sizing: border-box;
+        }
+
+        input[type=number] {
+            padding:10px;
+            border:1;
+            box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+            margin-top:10px;
+            margin-bottom: 10px;
+            margin-left: 10px;
+            border-radius:10px;
+            width: 100px;
+        }        
         .btn-group button {
           background-color: #4CAF50; /* Green background */
           border: 1px solid green; /* Green border */
           color: white; /* White text */
           padding: 10px 24px; /* Some padding */
+          margin-top: 10px;
           margin-right: 22px;
           cursor: pointer; /* Pointer/hand icon */
           float: left; /* Float the buttons side by side */
@@ -92,10 +110,54 @@
         @keyframes fadeout {
           from {bottom: 30px; opacity: 1;}
           to {bottom: 0; opacity: 0;}
-        }        
+        }
+        
+        .slidecontainer {
+          width: 400px; /* Width of the outside container */
+        }
+
+        .slider {
+          -webkit-appearance: none;
+          width: 100%;
+          height: 15px;
+          border-radius: 5px;
+          background: #d3d3d3;
+          outline: none;
+          opacity: 0.7;
+          -webkit-transition: .2s;
+          transition: opacity .2s;
+        }
+
+        .slider:hover {
+          opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 25px;
+          height: 25px;
+          border-radius: 50%;
+          background: #4CAF50;
+          cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+          width: 25px;
+          height: 25px;
+          border-radius: 50%;
+          background: #4CAF50;
+          cursor: pointer;
+        }
+        .sliderheader {
+            margin: 10px;
+        }
+        strong {
+            font-size: 150%;
+            font-family: monospace;
+        }
     </style>
     <script>
-    
 
 
     create_payload = [
@@ -168,14 +230,26 @@
 
     ];
 
+    function ShowError(errorMessage) {
+        var x = document.getElementById("snackbar");
+        x.innerHTML = errorMessage;
+        x.style.backgroundColor = "red";
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
 
+    function ShowMessage(message) {
+        var x = document.getElementById("snackbar");
+        x.innerHTML = message;
+        x.style.backgroundColor = "black";
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);          
+    }
     function CopyToClipboard() {
         var forest = document.getElementById("forest");
         forest.select();
         document.execCommand('copy');
-        var x = document.getElementById("snackbar");
-        x.className = "show";
-        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);          
+        ShowMessage("Slab Copied to Clipboard")
     }
 
     function clearPrintResults() {
@@ -186,12 +260,111 @@
         document.getElementById('output').innerHTML += '<p>' + message + '</p>';
     };
 
+    var seed = 1;
+    function random() {
+        var x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+    }
+
+    function AddAsset(width, depth, asset_width, asset_depth, percentage) {
+        var results = [];
+        for (var w = 0; w < width; w++) {
+            for (var d = 0; d < depth; d++) {
+                if ((Math.floor(random() * 100) + 1) > percentage) {
+                    continue;
+                }
+                results.push({'rotation': Math.floor(Math.random() * 3) * 4,
+                    'bounds': 
+                    {
+                        'center': {'x': w*asset_width, 'y': 1.38, 'z': d*asset_depth}, 
+                        'extents': {'x': 1, 'y': 1, 'z': 1}
+                    }
+                });
+            }
+        }
+        return results;
+    }
+
     function WriteRandomForest() { 
         clearPrintResults();
-        var randString = gen[Math.floor(Math.random() * gen.length)];
-        document.getElementById("forest").value = randString;
+        rock_percent = 40;
 
-        printResults(TalespireSlabs.DecodeSlab(randString));
+        grass_guid = "01c3a210-94fb-449f-8c47-993eda3e7126";
+        grass_asset = TalespireSlabs.GetAsset(grass_guid);
+        width = document.getElementById("widthslider").value;
+        depth = document.getElementById("depthslider").value;
+        console.log("asset:" + JSON.stringify(grass_asset) + " width: " + width + " depth: " + depth);
+        if (width.length == 0 || depth.length == 0) {
+            ShowError("You must set width and depth");
+            return;
+        }
+        
+        slab = [
+            {
+                'nguid': grass_guid, 
+                'assets': []
+            }
+        ]
+        asset_width = grass_asset["width"] - 1
+        asset_depth = grass_asset["depth"] - 1
+        for (var w = 0; w < width; w++) {
+            for (var d = 0; d < depth; d++) {
+                slab[0]['assets'].push({'rotation': 4,
+                    'bounds': 
+                    {
+                        'center': {'x': w*asset_width, 'y': 1, 'z': d*asset_depth}, 
+                        'extents': {'x': 1, 'y': 1, 'z': 1}
+                    }
+                })
+            }
+        }
+        
+        // Randomize rocks
+        rock_guid = "fee2bce5-fc53-4eab-bcba-0d7a73e84b49"
+        rock_asset = TalespireSlabs.GetAsset(rock_guid);
+        slab.push({'nguid': rock_guid, 'assets': []})
+        asset_width = rock_asset["width"] * 2;
+        asset_depth = rock_asset["depth"] * 2;
+        slab[1]['assets'] = AddAsset(width, depth, asset_width, asset_depth, document.getElementById("rockslider").value);
+
+        pine_guid = "4741652b-2345-49a4-bed5-3a7fbae91b7e"
+        pine_asset = TalespireSlabs.GetAsset(pine_guid);
+        slab.push({'nguid': pine_guid, 'assets': []})
+        asset_width = pine_asset["width"];
+        asset_depth = pine_asset["depth"];
+        slab[2]['assets'] = AddAsset(width, depth, asset_width, asset_depth, document.getElementById("pineslider").value);
+
+        dead_tree03_guid = "ed9bc853-bed5-443c-b45f-a7133d55011a"
+        dead_tree03_asset = TalespireSlabs.GetAsset(dead_tree03_guid);
+        slab.push({'nguid': dead_tree03_guid, 'assets': []})
+        asset_width = dead_tree03_asset["width"];
+        asset_depth = dead_tree03_asset["depth"];
+        slab[3]['assets'] = AddAsset(width, depth, asset_width, asset_depth, document.getElementById("deadtree03slider").value);
+
+        bushmedium_guid = "ff966bc3-dd95-4ca9-a217-1ca16fce6b52"
+        bushmedium_asset = TalespireSlabs.GetAsset(bushmedium_guid);
+        slab.push({'nguid': bushmedium_guid, 'assets': []})
+        asset_width = 2; //bushmedium_asset["width"] - 1;
+        asset_depth = 2; //bushmedium_asset["depth"] + 1;
+        slab[4]['assets'] = AddAsset(width, depth, asset_width, asset_depth, document.getElementById("bushmediumslider").value);
+
+        root01_guid = "b557beec-e795-4a65-99c4-0bbb0827077d"
+        root01_asset = TalespireSlabs.GetAsset(root01_guid);
+        slab.push({'nguid': root01_guid, 'assets': []})
+        asset_width = 2; //root01_asset["width"] - 1;
+        asset_depth = 2; //root01_asset["depth"] + 1;
+        slab[5]['assets'] = AddAsset(width, depth, asset_width, asset_depth, document.getElementById("root01slider").value);
+
+        tree01_guid = "d5b7910a-ae06-4ad3-91f6-cbbd8782bbea"
+        tree01_asset = TalespireSlabs.GetAsset(tree01_guid);
+        slab.push({'nguid': tree01_guid, 'assets': []})
+        asset_width = 2; //tree01_asset["width"] - 1;
+        asset_depth = 2; //tree01_asset["depth"] + 1;
+        slab[6]['assets'] = AddAsset(width, depth, asset_width, asset_depth, document.getElementById("tree01slider").value);
+
+        var results = TalespireSlabs.CreateSlab(slab);
+        document.getElementById("forest").value = results;
+        printResults(TalespireSlabs.DecodeSlab(results));
     }    
 
     function CreateSlab() {
@@ -203,23 +376,97 @@
 
     function ReadSlab() {
         clearPrintResults();
-        printResults(TalespireSlabs.DecodeSlab(document.getElementById("forest").value));
+        try {
+            printResults(TalespireSlabs.DecodeSlab(document.getElementById("forest").value));
+        } catch (err) {
+            console.log(err);
+            ShowError(err);
+        }
     }
+
     </script>
 </head>
 <body>
     <h1>Forest Generator</h1>
     <form onSubmit="return false;">
         <textarea style="height: 200px; width: 700px; resize: vertical;" id="forest"></textarea>
-        <div style="width: 720px" class="btn-group">
-            <button id="button" onclick = "WriteRandomForest();">Get Random Forest</button>
+        <div style="width: 720px; margin-top: 10px;" class="btn-group">
+            <button id="button" onclick = "WriteRandomForest();">Generate Random Forest</button>
             <button style="background: #66A" id="button" onclick="CopyToClipboard();">Copy To Clipboard</button>
-            <button style="float: right" id="button" onclick='ReadSlab();'>Read Slab</button>
-            <button style="background: #66A" id="button" onclick="CreateSlab();">Create Slab</button>
+            <button style="float: right; " id="button" onclick='ReadSlab();'>Read Pasted Slab</button>
+<!--             <button style="background: #66A" id="button" onclick="CreateSlab();">Create Slab</button> -->
+        </div>        
+        <h3>Slab Size</h3>
+        <div class="slidecontainer">
+          <p class="sliderheader">Slab Width: <strong><span id="slabwidth"></span></strong></p><input type="range" min="0" max="50" value="5" class="slider" id="widthslider">
+        </div>
+        <div class="slidecontainer">
+          <p class="sliderheader">Slab Depth: <strong><span id="slabdepth"></span></strong></p><input type="range" min="0" max="50" value="5" class="slider" id="depthslider">
+        </div>
 
+        <h3>Randomness</h3>
+        <div class="slidecontainer">
+          <p class="sliderheader">Tree 01: <strong><span id="tree01percent"></span>%</strong> </p><input type="range" min="0" max="100" value="10" class="slider" id="tree01slider">
+        </div>
+        <div class="slidecontainer">
+          <p class="sliderheader">Stackable Pine Top: <strong><span id="pinepercent"></span>%</strong> </p><input type="range" min="0" max="100" value="10" class="slider" id="pineslider">
+        </div>
+        <div class="slidecontainer">
+          <p class="sliderheader">Dead Tree 03: <strong><span id="deadtree03percent"></span>%</strong> </p><input type="range" min="0" max="100" value="10" class="slider" id="deadtree03slider">
+        </div>
+        <div class="slidecontainer">
+          <p class="sliderheader">Rock - Small: <strong><span id="rockpercent"></span>%</strong> </p><input type="range" min="0" max="100" value="40" class="slider" id="rockslider">
+        </div>
+        <div class="slidecontainer">
+          <p class="sliderheader">Bush - Medium: <strong><span id="bushmediumpercent"></span>%</strong> </p><input type="range" min="0" max="100" value="10" class="slider" id="bushmediumslider">
+        </div>
+        <div class="slidecontainer">
+          <p class="sliderheader">Root 01: <strong><span id="root01percent"></span>%</strong> </p><input type="range" min="0" max="100" value="10" class="slider" id="root01slider">
         </div>
     </form>
     <p style="width: 700px; background: #EEE; margin-left: 10px" id="output"></p>
-    <div id="snackbar">Copied to Clipboard</div>
+    <div id="snackbar"></div>
+    <script>
+        var widthslider = document.getElementById("widthslider");
+        document.getElementById("slabwidth").innerHTML = widthslider.value;
+        widthslider.oninput = function() {
+          document.getElementById("slabwidth").innerHTML = this.value;
+        }            
+        var depthslider = document.getElementById("depthslider");
+        document.getElementById("slabdepth").innerHTML = depthslider.value;
+        depthslider.oninput = function() {
+          document.getElementById("slabdepth").innerHTML = this.value;
+        }            
+        var rockslider = document.getElementById("rockslider");
+        document.getElementById("rockpercent").innerHTML = rockslider.value;
+        rockslider.oninput = function() {
+          document.getElementById("rockpercent").innerHTML = this.value;
+        }            
+        var pineslider = document.getElementById("pineslider");
+        document.getElementById("pinepercent").innerHTML = pineslider.value;
+        pineslider.oninput = function() {
+          document.getElementById("pinepercent").innerHTML = this.value;
+        }            
+        var deadtree03slider = document.getElementById("deadtree03slider");
+        document.getElementById("deadtree03percent").innerHTML = deadtree03slider.value;
+        deadtree03slider.oninput = function() {
+          document.getElementById("deadtree03percent").innerHTML = this.value;
+        }
+        var bushmediumslider = document.getElementById("bushmediumslider");
+        document.getElementById("bushmediumpercent").innerHTML = bushmediumslider.value;
+        bushmediumslider.oninput = function() {
+          document.getElementById("bushmediumpercent").innerHTML = this.value;
+        }        
+        var root01slider = document.getElementById("root01slider");
+        document.getElementById("root01percent").innerHTML = root01slider.value;
+        root01slider.oninput = function() {
+          document.getElementById("root01percent").innerHTML = this.value;
+        }
+        var tree01slider = document.getElementById("tree01slider");
+        document.getElementById("tree01percent").innerHTML = tree01slider.value;
+        tree01slider.oninput = function() {
+          document.getElementById("tree01percent").innerHTML = this.value;
+        }          
+    </script>
 </body>
 </html>

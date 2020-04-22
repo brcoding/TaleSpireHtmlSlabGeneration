@@ -64,7 +64,7 @@ var TalespireSlabs = (function () {
 
     var nguidHexToBytes = function(nguid) {
         var b = hexToBytes(nguid);
-        console.log("Hex to Bytes: " + b);
+        //console.log("Hex to Bytes: " + b);
         // rearrange bytes into bin format (smarter ways but brute force works fine)
         return [b[3], b[2], b[1], b[0], b[5], b[4], b[7], b[6], b[8], 
                 b[9], b[10], b[11], b[12], b[13], b[14], b[15]]
@@ -72,7 +72,7 @@ var TalespireSlabs = (function () {
 
     publicAPIs.CreateSlab = function(layouts=[]) { 
         // Create a large ArrayBuffer and DataView, We can slice what we don't need at the end.
-        var buffer = new ArrayBuffer(2048);
+        var buffer = new ArrayBuffer(Math.pow(2, 18));
         var bufferDataView = new DataView(buffer);
 
         // Write header
@@ -104,6 +104,7 @@ var TalespireSlabs = (function () {
         layouts.forEach(function(layout){ 
             // Write asset locations
             layout['assets'].forEach(function(asset) {
+                //console.log(bufPtr, asset['bounds']['center']['x']);
                 bufferDataView.setFloat32(bufPtr, asset['bounds']['center']['x'], true);
                 bufPtr += 4;
                 bufferDataView.setFloat32(bufPtr, asset['bounds']['center']['y'], true);
@@ -129,22 +130,24 @@ var TalespireSlabs = (function () {
                     unionMax = math.add(centerVector3, extentsVector3);
                 }
 
-                // var min = math.subtract(centerVector3, extentsVector3);
-                // var max = math.add(centerVector3, extentsVector3);
+                var min = math.subtract(centerVector3, extentsVector3);
+                var max = math.add(centerVector3, extentsVector3);
                 
-                // unionMin[0] = Math.min(min[0], unionMin[0]);
-                // unionMin[1] = Math.min(min[1], unionMin[1]);
-                // unionMin[2] = Math.min(min[2], unionMin[2]);
+                unionMin[0] = Math.min(min[0], unionMin[0]);
+                unionMin[1] = Math.min(min[1], unionMin[1]);
+                unionMin[2] = Math.min(min[2], unionMin[2]);
                 
-                // unionMax[0] = Math.min(max[0], unionMax[0]);
-                // unionMax[1] = Math.min(max[1], unionMax[1]);
-                // unionMax[2] = Math.min(max[2], unionMax[2]);
-
+                unionMax[0] = Math.max(max[0], unionMax[0]);
+                unionMax[1] = Math.max(max[1], unionMax[1]);
+                unionMax[2] = Math.max(max[2], unionMax[2]);
+                console.log(unionMin, unionMax);
 
             });
         });
         var unionCenterVector3 = math.multiply(0.5, math.add(unionMin, unionMax))
         var unionExtentsVector3 = math.multiply(0.5, math.subtract(unionMax, unionMin))
+        unionCenterVector3[0] = 1;
+        unionCenterVector3[2] = 1;
 
         bufferDataView.setFloat32(bufPtr, unionCenterVector3[0], true);
         bufPtr += 4;
@@ -180,7 +183,7 @@ var TalespireSlabs = (function () {
         var totalAssets = 0;
         // Loop over every layout and decode
         for (var i = 0; i < num_layouts; i++) {
-            console.log(new Int8Array(data.buffer.slice(bufPtr, bufPtr + 16)));
+            //console.log(new Int8Array(data.buffer.slice(bufPtr, bufPtr + 16)));
             var ng_a1 = new Int8Array(data.buffer.slice(bufPtr, bufPtr + 1));
             bufPtr += 1;
             var ng_a2 = new Int8Array(data.buffer.slice(bufPtr, bufPtr + 1));
@@ -231,9 +234,9 @@ var TalespireSlabs = (function () {
             decodedAssets.push({"nguid": hexNguid, "assetCount": assetCount})
             totalAssets += assetCount;
             // Skip terminator for struct
-            var unknown = new Uint16Array(data.buffer.slice(bufPtr, bufPtr + 2))[0];
+            //var unknown = new Uint16Array(data.buffer.slice(bufPtr, bufPtr + 2))[0];
             bufPtr += 2;
-            console.log("unknown: " + unknown);
+            //console.log("unknown: " + unknown);
         }
         console.log("Total Asset Count: " + totalAssets);
         results += "<p>Total Asset Count: " + totalAssets + "</p>";
@@ -300,21 +303,34 @@ var TalespireSlabs = (function () {
     }
 
     publicAPIs.DecodeSlab = function(paste) {
+        if (paste.length == 0) {
+            throw "Unable to read slab."
+        }
+        if (!paste.includes("`")) {
+            throw "Invalid paste value" 
+        }
         paste = paste.replace(/[` ]/g, "")
         //clearPrintResults();
 
         // Decode base64 (convert ascii to binary)
         var strData     = atob(paste);
-
+        if (strData.length == 0) {
+            throw "Unable to process paste. Base64 decode returned empty results."
+        }
         // Convert binary string to character-number array
         var charData    = strData.split('').map(function(x){return x.charCodeAt(0);});
 
         // Turn number array into byte-array
-        var binData     = new Uint8Array(charData);
+        var binData = new Uint8Array(charData);
 
+        var data;
+        try {
         // Pako magic
-        var data        = pako.inflate(binData);
-        console.log("Data: " + toHexString(data, true));
+            data = pako.inflate(binData);
+        } catch {
+            throw "Unable to inflate gzip contents. Cannot read slab."
+        }
+
         // Convert gunzipped byteArray back to ascii string:
         var strData     = String.fromCharCode.apply(null, new Uint16Array(data));
 
