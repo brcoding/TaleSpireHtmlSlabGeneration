@@ -4,6 +4,7 @@
     <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAiPFoAAAAAAES7lQBDwJIAP8CVADzAkAA/v5kAQr+RAB48WwBEv5EAN8GSACA8WwA7wJMAV7yeAEyzlwBGvpUASb+ZAD6/kgAhO10AP76WADHCjQCT1sQAPcGTAEvDnQAkPVsAMUVeAEm7lwA4wZEAPMCSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQsYCwEBAQEBAQEBAQEBAQEBEgEBAQEBAQEBAQEBAQEBAQsBAQEBAQEBAQEBAQEBAQEZAQEBAQEBAQEBAQEXHBwBAAEcHAEBAQEBAQEJHBwcFAsVHBwcFgEBAQERHBwcHBwIHBwMHBwcAQEBDBwcHBMcHBwCHBwcBgEBAQQKHAUcHBwOHBwcEAEBAQEBGxwcHBwcGhwcHBwBAQEBARwNHBwcDxwcHBwBAQEBAQEcHBwcHBwcHBwHAQEBAQEBARwcHBwcHBwcAQEBAQEBAQEBHBwcHBwcAQEBAQEBAQEBAQEBHBwDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf4/AAD/fwAA/38AAP9/AADxTwAA4AMAAMABAADAAQAAwAMAAOADAADgBwAA4AcAAPAPAAD4HwAA/j8AAP//AAA=" rel="icon" type="image/x-icon" />
     <!-- Local asset data -->    
     <script src="talespireslabs.js"></script>
+    <script src="assetdata.js"></script>
 
     <style>
         body {
@@ -157,6 +158,33 @@
         }
     </style>
     <script>
+    var prop_assets = [
+        {
+            "nguid": "fee2bce5-fc53-4eab-bcba-0d7a73e84b49",
+            "defaultpercent": 40,
+        },
+        {
+            "nguid": "d5b7910a-ae06-4ad3-91f6-cbbd8782bbea",
+            "defaultpercent": 10,
+        },
+        {
+            "nguid": "b557beec-e795-4a65-99c4-0bbb0827077d",
+            "defaultpercent": 10,
+        },
+        {
+            "nguid": "4741652b-2345-49a4-bed5-3a7fbae91b7e",
+            "defaultpercent": 10,
+        },
+        {
+            "nguid": "ed9bc853-bed5-443c-b45f-a7133d55011a",
+            "defaultpercent": 10,
+        },
+        {
+            "nguid": "ff966bc3-dd95-4ca9-a217-1ca16fce6b52",
+            "defaultpercent": 10,
+        }
+    ];
+
     function ShowError(errorMessage) {
         var x = document.getElementById("snackbar");
         x.innerHTML = errorMessage;
@@ -187,108 +215,50 @@
         document.getElementById('output').innerHTML += '<p>' + message + '</p>';
     };
 
-    var seed = 1;
+    var seed = new Date() / 1000;;
     function random() {
         var x = Math.sin(seed++) * 10000;
         return x - Math.floor(x);
     }
 
-    function AddAsset(width, depth, asset_width, asset_depth, percentage) {
-        var results = [];
+    function AddAsset(nguid, width, depth, center_height, percentage) {
+        console.log("Adding asset: " + nguid + " Width: " + width + " Depth: " + depth + " Height: " + center_height + " Percentage: " + percentage);
+        var asset = TalespireSlabs.GetAsset(nguid);
+        var assets = [];
         for (var w = 0; w < width; w++) {
             for (var d = 0; d < depth; d++) {
                 if ((Math.floor(random() * 100) + 1) > percentage) {
                     continue;
                 }
-                results.push({'rotation': Math.floor(Math.random() * 3) * 4,
+                assets.push({'rotation': Math.floor(Math.random() * 3) * 4,
                     'bounds': 
                     {
-                        'center': {'x': w*asset_width, 'y': 1.38, 'z': d*asset_depth}, 
+                        'center': {'x': w*2, 'y': center_height, 'z': d*2},
                         'extents': {'x': 1, 'y': 1, 'z': 1}
                     }
                 });
             }
         }
-        return results;
+        return {'nguid': nguid, 'assets': assets};
     }
 
     function WriteRandomForest() { 
         clearPrintResults();
-        rock_percent = 40;
 
-        grass_guid = "01c3a210-94fb-449f-8c47-993eda3e7126";
-        grass_asset = TalespireSlabs.GetAsset(grass_guid);
-        width = document.getElementById("widthslider").value;
-        depth = document.getElementById("depthslider").value;
-        console.log("asset:" + JSON.stringify(grass_asset) + " width: " + width + " depth: " + depth);
-        if (width.length == 0 || depth.length == 0) {
-            ShowError("You must set width and depth");
-            return;
-        }
-        
-        slab = [
-            {
-                'nguid': grass_guid, 
-                'assets': []
-            }
-        ]
-        asset_width = grass_asset["width"] - 1
-        asset_depth = grass_asset["depth"] - 1
-        for (var w = 0; w < width; w++) {
-            for (var d = 0; d < depth; d++) {
-                slab[0]['assets'].push({'rotation': 4,
-                    'bounds': 
-                    {
-                        'center': {'x': w*asset_width, 'y': 1, 'z': d*asset_depth}, 
-                        'extents': {'x': 1, 'y': 1, 'z': 1}
-                    }
-                })
-            }
-        }
-        
-        // Randomize rocks
-        rock_guid = "fee2bce5-fc53-4eab-bcba-0d7a73e84b49"
-        rock_asset = TalespireSlabs.GetAsset(rock_guid);
-        slab.push({'nguid': rock_guid, 'assets': []})
-        asset_width = rock_asset["width"] * 2;
-        asset_depth = rock_asset["depth"] * 2;
-        slab[1]['assets'] = AddAsset(width, depth, asset_width, asset_depth, document.getElementById("rockslider").value);
+        var slab = [];
 
-        pine_guid = "4741652b-2345-49a4-bed5-3a7fbae91b7e"
-        pine_asset = TalespireSlabs.GetAsset(pine_guid);
-        slab.push({'nguid': pine_guid, 'assets': []})
-        asset_width = pine_asset["width"];
-        asset_depth = pine_asset["depth"];
-        slab[2]['assets'] = AddAsset(width, depth, asset_width, asset_depth, document.getElementById("pineslider").value);
+        var width = document.getElementById("widthslider").value;
+        var depth = document.getElementById("depthslider").value;
 
-        dead_tree03_guid = "ed9bc853-bed5-443c-b45f-a7133d55011a"
-        dead_tree03_asset = TalespireSlabs.GetAsset(dead_tree03_guid);
-        slab.push({'nguid': dead_tree03_guid, 'assets': []})
-        asset_width = dead_tree03_asset["width"];
-        asset_depth = dead_tree03_asset["depth"];
-        slab[3]['assets'] = AddAsset(width, depth, asset_width, asset_depth, document.getElementById("deadtree03slider").value);
+        var grass_guid = "01c3a210-94fb-449f-8c47-993eda3e7126";
+        slab.push(AddAsset(grass_guid, width, depth, 1, 100));
 
-        bushmedium_guid = "ff966bc3-dd95-4ca9-a217-1ca16fce6b52"
-        bushmedium_asset = TalespireSlabs.GetAsset(bushmedium_guid);
-        slab.push({'nguid': bushmedium_guid, 'assets': []})
-        asset_width = 2; //bushmedium_asset["width"] - 1;
-        asset_depth = 2; //bushmedium_asset["depth"] + 1;
-        slab[4]['assets'] = AddAsset(width, depth, asset_width, asset_depth, document.getElementById("bushmediumslider").value);
 
-        root01_guid = "b557beec-e795-4a65-99c4-0bbb0827077d"
-        root01_asset = TalespireSlabs.GetAsset(root01_guid);
-        slab.push({'nguid': root01_guid, 'assets': []})
-        asset_width = 2; //root01_asset["width"] - 1;
-        asset_depth = 2; //root01_asset["depth"] + 1;
-        slab[5]['assets'] = AddAsset(width, depth, asset_width, asset_depth, document.getElementById("root01slider").value);
+        prop_assets.forEach(function(prop_asset){
+            slab.push(AddAsset(prop_asset['nguid'], width, depth, 1.38, document.getElementById(prop_asset['nguid'] + "slider").value));
+        });
 
-        tree01_guid = "d5b7910a-ae06-4ad3-91f6-cbbd8782bbea"
-        tree01_asset = TalespireSlabs.GetAsset(tree01_guid);
-        slab.push({'nguid': tree01_guid, 'assets': []})
-        asset_width = 2; //tree01_asset["width"] - 1;
-        asset_depth = 2; //tree01_asset["depth"] + 1;
-        slab[6]['assets'] = AddAsset(width, depth, asset_width, asset_depth, document.getElementById("tree01slider").value);
-
+        console.log(slab);
         var results = TalespireSlabs.CreateSlab(slab);
         document.getElementById("forest").value = results;
         printResults(TalespireSlabs.DecodeSlab(results));
@@ -324,24 +294,7 @@
         </div>
 
         <h3>Randomness</h3>
-        <div class="slidecontainer">
-          <p class="sliderheader">Tree 01: <strong><span id="tree01percent"></span>%</strong> </p><input type="range" min="0" max="100" value="10" class="slider" id="tree01slider">
-        </div>
-        <div class="slidecontainer">
-          <p class="sliderheader">Stackable Pine Top: <strong><span id="pinepercent"></span>%</strong> </p><input type="range" min="0" max="100" value="10" class="slider" id="pineslider">
-        </div>
-        <div class="slidecontainer">
-          <p class="sliderheader">Dead Tree 03: <strong><span id="deadtree03percent"></span>%</strong> </p><input type="range" min="0" max="100" value="10" class="slider" id="deadtree03slider">
-        </div>
-        <div class="slidecontainer">
-          <p class="sliderheader">Rock - Small: <strong><span id="rockpercent"></span>%</strong> </p><input type="range" min="0" max="100" value="40" class="slider" id="rockslider">
-        </div>
-        <div class="slidecontainer">
-          <p class="sliderheader">Bush - Medium: <strong><span id="bushmediumpercent"></span>%</strong> </p><input type="range" min="0" max="100" value="10" class="slider" id="bushmediumslider">
-        </div>
-        <div class="slidecontainer">
-          <p class="sliderheader">Root 01: <strong><span id="root01percent"></span>%</strong> </p><input type="range" min="0" max="100" value="10" class="slider" id="root01slider">
-        </div>
+        <span id="randomsliders"></span>
     </form>
     <p style="width: 700px; background: #EEE; margin-left: 10px" id="output"></p>
     <div id="snackbar"></div>
@@ -355,37 +308,52 @@
         document.getElementById("slabdepth").innerHTML = depthslider.value;
         depthslider.oninput = function() {
           document.getElementById("slabdepth").innerHTML = this.value;
-        }            
-        var rockslider = document.getElementById("rockslider");
-        document.getElementById("rockpercent").innerHTML = rockslider.value;
-        rockslider.oninput = function() {
-          document.getElementById("rockpercent").innerHTML = this.value;
-        }            
-        var pineslider = document.getElementById("pineslider");
-        document.getElementById("pinepercent").innerHTML = pineslider.value;
-        pineslider.oninput = function() {
-          document.getElementById("pinepercent").innerHTML = this.value;
-        }            
-        var deadtree03slider = document.getElementById("deadtree03slider");
-        document.getElementById("deadtree03percent").innerHTML = deadtree03slider.value;
-        deadtree03slider.oninput = function() {
-          document.getElementById("deadtree03percent").innerHTML = this.value;
         }
-        var bushmediumslider = document.getElementById("bushmediumslider");
-        document.getElementById("bushmediumpercent").innerHTML = bushmediumslider.value;
-        bushmediumslider.oninput = function() {
-          document.getElementById("bushmediumpercent").innerHTML = this.value;
-        }        
-        var root01slider = document.getElementById("root01slider");
-        document.getElementById("root01percent").innerHTML = root01slider.value;
-        root01slider.oninput = function() {
-          document.getElementById("root01percent").innerHTML = this.value;
-        }
-        var tree01slider = document.getElementById("tree01slider");
-        document.getElementById("tree01percent").innerHTML = tree01slider.value;
-        tree01slider.oninput = function() {
-          document.getElementById("tree01percent").innerHTML = this.value;
-        }          
+
+        prop_assets.forEach(function(prop_asset){
+            var sliderdiv = document.createElement("div");
+            sliderdiv.style.width = "400px";
+            var asset = TalespireSlabs.GetAsset(prop_asset['nguid']);
+            sliderdiv.innerHTML = '<p class="sliderheader">' + asset['name'] + ': <strong><span id="' + prop_asset['nguid'] + 'percent"></span>%</strong> </p><input type="range" min="0" max="100" value="' + prop_asset['defaultpercent'] + '" class="slider" id="' + prop_asset['nguid'] + 'slider">';
+            document.getElementById("randomsliders").appendChild(sliderdiv);
+            var randslider = document.getElementById(prop_asset['nguid'] + "slider");
+            document.getElementById(prop_asset['nguid'] + "percent").innerHTML = randslider.value;
+            randslider.oninput = function() {
+                document.getElementById(prop_asset['nguid'] + "percent").innerHTML = this.value;
+            }
+        });
+        
+
+        // var rockslider = document.getElementById("rockslider");
+        // document.getElementById("rockpercent").innerHTML = rockslider.value;
+        // rockslider.oninput = function() {
+        //   document.getElementById("rockpercent").innerHTML = this.value;
+        // }            
+        // var pineslider = document.getElementById("pineslider");
+        // document.getElementById("pinepercent").innerHTML = pineslider.value;
+        // pineslider.oninput = function() {
+        //   document.getElementById("pinepercent").innerHTML = this.value;
+        // }            
+        // var deadtree03slider = document.getElementById("deadtree03slider");
+        // document.getElementById("deadtree03percent").innerHTML = deadtree03slider.value;
+        // deadtree03slider.oninput = function() {
+        //   document.getElementById("deadtree03percent").innerHTML = this.value;
+        // }
+        // var bushmediumslider = document.getElementById("bushmediumslider");
+        // document.getElementById("bushmediumpercent").innerHTML = bushmediumslider.value;
+        // bushmediumslider.oninput = function() {
+        //   document.getElementById("bushmediumpercent").innerHTML = this.value;
+        // }        
+        // var root01slider = document.getElementById("root01slider");
+        // document.getElementById("root01percent").innerHTML = root01slider.value;
+        // root01slider.oninput = function() {
+        //   document.getElementById("root01percent").innerHTML = this.value;
+        // }
+        // var tree01slider = document.getElementById("tree01slider");
+        // document.getElementById("tree01percent").innerHTML = tree01slider.value;
+        // tree01slider.oninput = function() {
+        //   document.getElementById("tree01percent").innerHTML = this.value;
+        // }          
     </script>
 </body>
 </html>
