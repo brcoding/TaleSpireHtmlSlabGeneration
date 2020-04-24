@@ -19,9 +19,21 @@ for root,d_names,f_names in os.walk(path):
             asset = json.loads(currentFile.read())
             nguid = asset["GUID"]
             asset_name = asset["boardAssetName"]
-            width = asset["assetLoaders"][0]["occluderInfo"]["Width"]
+            width = 0
+            depth = 0
+            for tag in asset["Tags"]:
+                if "X" in tag:
+                    try:
+                        width = int(tag[:tag.index("X")])
+                        depth = int(tag[tag.index("X"):])
+                    except ValueError:
+                        print("Invalid tag with X")
+                        pass
             height = asset["assetLoaders"][0]["occluderInfo"]["Height"]
-            depth = asset["assetLoaders"][0]["occluderInfo"]["Depth"]
+            if width == 0:
+                width = asset["assetLoaders"][0]["occluderInfo"]["Width"]
+            if depth == 0:
+                depth = asset["assetLoaders"][0]["occluderInfo"]["Depth"]
             output[nguid] = {"name": asset_name, "width": width, "height": height, "depth": depth}
 with open("assetdata.js", "w") as fout:
     fout.write("asset_data = " + json.dumps(output) + ";")

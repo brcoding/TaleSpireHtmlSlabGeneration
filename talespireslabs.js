@@ -34,7 +34,7 @@ var TalespireSlabs = (function () {
         return asset_data[nguid];
     }
 
-    publicAPIs.GetAllAsset = function() {
+    publicAPIs.GetAllAssets = function() {
         return asset_data;
     }
 

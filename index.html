@@ -1,6 +1,7 @@
 <html>
 <head>
     <title>Forest Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAiPFoAAAAAAES7lQBDwJIAP8CVADzAkAA/v5kAQr+RAB48WwBEv5EAN8GSACA8WwA7wJMAV7yeAEyzlwBGvpUASb+ZAD6/kgAhO10AP76WADHCjQCT1sQAPcGTAEvDnQAkPVsAMUVeAEm7lwA4wZEAPMCSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQsYCwEBAQEBAQEBAQEBAQEBEgEBAQEBAQEBAQEBAQEBAQsBAQEBAQEBAQEBAQEBAQEZAQEBAQEBAQEBAQEXHBwBAAEcHAEBAQEBAQEJHBwcFAsVHBwcFgEBAQERHBwcHBwIHBwMHBwcAQEBDBwcHBMcHBwCHBwcBgEBAQQKHAUcHBwOHBwcEAEBAQEBGxwcHBwcGhwcHBwBAQEBARwNHBwcDxwcHBwBAQEBAQEcHBwcHBwcHBwHAQEBAQEBARwcHBwcHBwcAQEBAQEBAQEBHBwcHBwcAQEBAQEBAQEBAQEBHBwDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf4/AAD/fwAA/38AAP9/AADxTwAA4AMAAMABAADAAQAAwAMAAOADAADgBwAA4AcAAPAPAAD4HwAA/j8AAP//AAA=" rel="icon" type="image/x-icon" />
     <!-- Local asset data -->    
     <script src="talespireslabs.js"></script>
@@ -156,6 +157,123 @@
             font-size: 150%;
             font-family: monospace;
         }
+        .btn {
+          background-color: #DDD; /* Blue background */
+          border: none; /* Remove borders */
+          color: white; /* White text */
+          padding: 6px 6px; /* Some padding */
+          font-size: 16px; /* Set a font size */
+          cursor: pointer; /* Mouse pointer on hover */
+          border-radius: 100%;
+        }
+
+        .addbtn {
+          margin: 20px;
+          background-color: #DDD; /* Blue background */
+          border: none; /* Remove borders */
+          color: white; /* White text */
+          padding: 6px 6px; /* Some padding */
+          font-size: 16px; /* Set a font size */
+          cursor: pointer; /* Mouse pointer on hover */
+          border-radius: 10%;
+        }
+        .addbtn:hover {
+          background-color: #AAA;
+        }        
+
+        /* Darker background on mouse-over */
+        .btn:hover {
+          background-color: #AAA;
+        }
+        /* The Modal (background) */
+        .modal {
+          display: none; /* Hidden by default */
+          position: fixed; /* Stay in place */
+          z-index: 1; /* Sit on top */
+          left: 0;
+          top: 0;
+          width: 100%; /* Full width */
+          height: 100%; /* Full height */
+          overflow: auto; /* Enable scroll if needed */
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+          background-color: #fefefe;
+          margin: 15% auto; /* 15% from the top and centered */
+
+          padding: 20px;
+          border: 1px solid #888;
+          width: 80%; /* Could be more or less, depending on screen size */
+        }
+
+        .modal-body {
+            font-family: Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+            font-size: 150%;
+          background-color: #fefefe;
+          padding: 20px;
+          padding-right: 1px;
+          width: 100%; /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button */
+        .modalClose {
+          color: #DDD;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+        }
+
+        .modalClose:hover,
+        .modalClose:focus {
+          color: #AAA;
+          text-decoration: none;
+          cursor: pointer;
+        }
+        /* The Close Button */
+        .modalOk {
+          color: #629632;
+          font-size: 28px;
+          font-weight: bold;
+          float: right;
+        }
+
+        .modalOk:hover,
+        .modalOk:focus {
+          color: #6A8455;
+          text-decoration: none;
+          cursor: pointer;
+        }
+        table {  
+            color: #333;
+            font-family: Helvetica, Arial, sans-serif;
+            border-collapse: 
+            collapse; border-spacing: 0; 
+            overflow: auto;
+        }
+
+        td, th {  
+            border: 1px solid transparent; /* No more visible border */
+            height: 30px; 
+            transition: all 0.3s;  /* Simple transition for hover effect */
+        }
+
+        th {  
+            background: #DFDFDF;  /* Darken header a bit */
+            font-weight: bold;
+        }
+
+        td {  
+            background: #FAFAFA;
+        }
+
+        /* Cells in even rows (2,4,6...) are one color */        
+        tr:nth-child(even) td { background: #F1F1F1; }   
+
+        /* Cells in odd rows (1,3,5...) are another (excludes header cells)  */        
+        tr:nth-child(odd) td { background: #FEFEFE; }       
     </style>
     <script>
     var prop_assets = [
@@ -253,9 +371,9 @@
         var grass_guid = "01c3a210-94fb-449f-8c47-993eda3e7126";
         slab.push(AddAsset(grass_guid, width, depth, 1, 100));
 
-
-        prop_assets.forEach(function(prop_asset){
-            slab.push(AddAsset(prop_asset['nguid'], width, depth, 1.38, document.getElementById(prop_asset['nguid'] + "slider").value));
+        const sliderpercents = document.querySelectorAll("input[nguid]");
+        sliderpercents.forEach(function(percent) {
+            slab.push(AddAsset(percent.getAttribute("nguid"), width, depth, 1.38, percent.value));
         });
 
         console.log(slab);
@@ -273,7 +391,27 @@
             ShowError(err);
         }
     }
+    function searchAssets() {
+      // Declare variables
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("assetSearch");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("assetTable");
+      tr = table.getElementsByTagName("tr");
 
+      // Loop through all table rows, and hide those who don't match the search query
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
     </script>
 </head>
 <body>
@@ -295,10 +433,54 @@
 
         <h3>Randomness</h3>
         <span id="randomsliders"></span>
+        <div id="AssetSelect" class="modal">
+
+          <!-- Modal content -->
+          <div class="modal-content">
+            <div class="modal-body">
+                <div onclick='AssetSelect.style.display = "none";' class="modalClose"><i class="fa fa-close"></i></div>
+                <p>Select an asset:</p>
+                <input type="text" id="assetSearch" onkeyup="searchAssets()" style="font-size: 100%;font-family:Candara, Calibri, Segoe, FontAwesome" placeholder="&#xf002; Search">
+                <div id="assetTable"></div>
+
+            
+                <div onclick='AssetSelect.style.display = "none";' class="modalOk"><i class="fa fa-check-square"></i></div>
+            </div>
+            
+          </div>
+
+        </div>
+        <button onClick='AssetSelect.style.display = "block";' class="addbtn"><i class="fa fa-plus"> Add Asset</i></button>
     </form>
     <p style="width: 700px; background: #EEE; margin-left: 10px" id="output"></p>
     <div id="snackbar"></div>
     <script>
+        function AddAssetToList(nguid, defaultpercent) {
+            var sliderdiv = document.createElement("div");
+            sliderdiv.style.width = "400px";
+            nguid = nguid.trim();
+
+            var asset = TalespireSlabs.GetAsset(nguid);
+
+            sliderdiv.innerHTML = '<p class="sliderheader">' + asset['name'] + ': <strong><span id="' + nguid + 'percent"></span>%</strong> <button onClick="this.parentNode.parentNode.innerHTML=\'\';" class="btn" id="' + nguid + 'removebtn"><i class="fa fa-close"></i></button></p><input type="range" min="0" max="100" nguid="' + nguid + '" value="' + defaultpercent + '" class="slider" id="' + nguid + 'slider">';
+            document.getElementById("randomsliders").appendChild(sliderdiv);
+            var randslider = document.getElementById(nguid + "slider");
+            document.getElementById(nguid + "percent").innerHTML = randslider.value;
+            randslider.oninput = function() {
+                document.getElementById(nguid + "percent").innerHTML = this.value;
+            }
+        }
+
+        var tmpTable = '<table style="margin-top: 20px;"cellspacing="0" cellpadding="0" border="0"><tr><th>Asset Name</th></tr><tr><td><div style="height: 400px; overflow:auto;"><table width="600px" align="left" id="assetTable" cellspacing="0" cellpadding="0" border="1">';
+        assets = TalespireSlabs.GetAllAssets();
+
+        Object.entries(assets).forEach(function(asset) {
+            tmpTable += "<tr><td>" + asset[1]["name"] + '</td><td><button onClick="AddAssetToList(\'' + asset[0] + '\', 10);AssetSelect.style.display = \'block\';" class="addbtn"><i class="fa fa-plus"> Select</i></button></td></tr>';
+        });
+        tmpTable += "</table></div></td></tr></table>";
+
+        assetTable.innerHTML = tmpTable;
+
         var widthslider = document.getElementById("widthslider");
         document.getElementById("slabwidth").innerHTML = widthslider.value;
         widthslider.oninput = function() {
@@ -310,50 +492,11 @@
           document.getElementById("slabdepth").innerHTML = this.value;
         }
 
+
         prop_assets.forEach(function(prop_asset){
-            var sliderdiv = document.createElement("div");
-            sliderdiv.style.width = "400px";
-            var asset = TalespireSlabs.GetAsset(prop_asset['nguid']);
-            sliderdiv.innerHTML = '<p class="sliderheader">' + asset['name'] + ': <strong><span id="' + prop_asset['nguid'] + 'percent"></span>%</strong> </p><input type="range" min="0" max="100" value="' + prop_asset['defaultpercent'] + '" class="slider" id="' + prop_asset['nguid'] + 'slider">';
-            document.getElementById("randomsliders").appendChild(sliderdiv);
-            var randslider = document.getElementById(prop_asset['nguid'] + "slider");
-            document.getElementById(prop_asset['nguid'] + "percent").innerHTML = randslider.value;
-            randslider.oninput = function() {
-                document.getElementById(prop_asset['nguid'] + "percent").innerHTML = this.value;
-            }
+            AddAssetToList(prop_asset['nguid'], prop_asset['defaultpercent']);
         });
         
-
-        // var rockslider = document.getElementById("rockslider");
-        // document.getElementById("rockpercent").innerHTML = rockslider.value;
-        // rockslider.oninput = function() {
-        //   document.getElementById("rockpercent").innerHTML = this.value;
-        // }            
-        // var pineslider = document.getElementById("pineslider");
-        // document.getElementById("pinepercent").innerHTML = pineslider.value;
-        // pineslider.oninput = function() {
-        //   document.getElementById("pinepercent").innerHTML = this.value;
-        // }            
-        // var deadtree03slider = document.getElementById("deadtree03slider");
-        // document.getElementById("deadtree03percent").innerHTML = deadtree03slider.value;
-        // deadtree03slider.oninput = function() {
-        //   document.getElementById("deadtree03percent").innerHTML = this.value;
-        // }
-        // var bushmediumslider = document.getElementById("bushmediumslider");
-        // document.getElementById("bushmediumpercent").innerHTML = bushmediumslider.value;
-        // bushmediumslider.oninput = function() {
-        //   document.getElementById("bushmediumpercent").innerHTML = this.value;
-        // }        
-        // var root01slider = document.getElementById("root01slider");
-        // document.getElementById("root01percent").innerHTML = root01slider.value;
-        // root01slider.oninput = function() {
-        //   document.getElementById("root01percent").innerHTML = this.value;
-        // }
-        // var tree01slider = document.getElementById("tree01slider");
-        // document.getElementById("tree01percent").innerHTML = tree01slider.value;
-        // tree01slider.oninput = function() {
-        //   document.getElementById("tree01percent").innerHTML = this.value;
-        // }          
     </script>
 </body>
 </html>
