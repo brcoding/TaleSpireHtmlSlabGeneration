@@ -10,11 +10,26 @@
     <style>
         body {
             font-family: Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+            margin: 0px;
+            padding: 0px;
         }
         *, *:before, *:after {
           box-sizing: border-box;
         }
 
+        .footer {
+          float: left;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          background-color: #DDD;
+          color: #333;
+          text-align: center;
+          padding: 20px;
+        }
+        input:active { 
+            outline:none;
+        }
         input[type=number] {
             padding:10px;
             border:1;
@@ -26,6 +41,7 @@
             width: 100px;
         }        
         .btn-group button {
+          outline:none;
           background-color: #4CAF50; /* Green background */
           border: 1px solid green; /* Green border */
           color: white; /* White text */
@@ -49,7 +65,8 @@
 
         /* Add a background color on hover */
         .btn-group button:hover {
-          background-color: #3e8e41;
+          background-color: #5edb62;
+          color: #333;
         }
         textarea {
             background: #f4f4f4;
@@ -167,18 +184,28 @@
           border-radius: 100%;
         }
 
+        .clipboardbutton {
+          background-color: #7177c7 !important;/* Blue background */
+        }
+
+        .clipboardbutton:hover {
+          background-color: #9198f2 !important;/* Blue background */
+        }
+
         .addbtn {
           margin: 20px;
-          background-color: #DDD; /* Blue background */
+          float: right;
+          background-color: #7177c7; /* Blue background */
           border: none; /* Remove borders */
           color: white; /* White text */
           padding: 6px 6px; /* Some padding */
           font-size: 16px; /* Set a font size */
           cursor: pointer; /* Mouse pointer on hover */
           border-radius: 10%;
+          font-size: 20px;
         }
         .addbtn:hover {
-          background-color: #AAA;
+          background-color: #9198f2;
         }        
 
         /* Darker background on mouse-over */
@@ -206,7 +233,7 @@
 
           padding: 20px;
           border: 1px solid #888;
-          width: 80%; /* Could be more or less, depending on screen size */
+          width: 850px; /* Could be more or less, depending on screen size */
         }
 
         .modal-body {
@@ -238,6 +265,7 @@
           font-size: 28px;
           font-weight: bold;
           float: right;
+          margin-top: 10px;
         }
 
         .modalOk:hover,
@@ -273,7 +301,50 @@
         tr:nth-child(even) td { background: #F1F1F1; }   
 
         /* Cells in odd rows (1,3,5...) are another (excludes header cells)  */        
-        tr:nth-child(odd) td { background: #FEFEFE; }       
+        tr:nth-child(odd) td { background: #FEFEFE; }
+        .row {
+          display: flex;
+          margin: 20px;
+        }
+        
+        .output {
+            width: 400px;
+            height: 500px;
+            overflow: auto;
+            background: #DDD;
+            margin-left: 40px;
+            border: 1px solid black;
+        }
+
+        .tooltip {
+          position: relative;
+          display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+          visibility: hidden;
+          width: 270px;
+          background-color: #DDD;
+          color: black;
+          text-align: center;
+          border-radius: 6px;
+          padding: 5px 0;
+          position: absolute;
+          z-index: 1;
+          bottom: 100%;
+          left: 50%;
+          margin-left: -70px;
+          margin-bottom: 5px;
+          
+          /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+          opacity: 0;
+          transition: opacity 0.5s;
+        }
+
+        .tooltip:hover .tooltiptext {
+          visibility: visible;
+          opacity: 1;
+        }
     </style>
     <script>
     var prop_assets = [
@@ -416,45 +487,57 @@
 </head>
 <body>
     <span style="margin: 10px;font-size: 120%; float: right"><a href="https://github.com/brcoding/TaleSpireHtmlSlabGeneration"><i class="fa fa-github"></i> Github Project</a></span>
-    <h1>Forest Generator <img style="float: left" height="50px" src="Pine_Tree.png"></h1>
+    <h1 style="padding-left: 20px; padding-top: 20px">Forest Generator <img style="float: left" height="50px" src="Pine_Tree.png"></h1>
 
     <form onSubmit="return false;">
-        <textarea style="height: 200px; width: 700px; resize: vertical;" id="forest"></textarea>
-        <div style="width: 720px; margin-top: 10px;" class="btn-group">
-            <button id="button" onclick = "WriteRandomForest();">Generate Random Forest</button>
-            <button style="background: #66A" id="button" onclick="CopyToClipboard();">Copy To Clipboard</button>
-            <button style="float: right; " id="button" onclick='ReadSlab();'>Read Pasted Slab</button>
-        </div>        
-        <h3>Slab Size</h3>
-        <div class="slidecontainer">
-          <p class="sliderheader">Slab Width: <strong><span id="slabwidth"></span></strong></p><input type="range" min="0" max="50" value="5" class="slider" id="widthslider">
+        <textarea style="margin: 10px; height: 200px; width: 850px; resize: vertical;" id="forest"></textarea>
+
+        <div style="width: 850px; margin: 10px;" class="btn-group">
+            <button id="button" onclick = "WriteRandomForest();">Generate Random Forest <span class="tooltip"><i class="fa fa-question-circle"></i>
+          <span class="tooltiptext">Clicking this button will take the values from slab size and randomness below and create a slab that can be pasted in to TaleSpire.</span>
+        </span></button>
+            <button class="clipboardbutton" id="button" onclick="CopyToClipboard();">Copy To Clipboard <span class="tooltip"><i class="fa fa-question-circle"></i><span class="tooltiptext">This button copies the contents of the above into your clipboard.</span></button>
+            <button style="float: right; " id="button" onclick='ReadSlab();'>Read Pasted Slab <span class="tooltip"><i class="fa fa-question-circle"></i><span class="tooltiptext">Reads the value that has been pasted (from TaleSpire) and prints out the associated data in the Decoded Results.</span></button>
         </div>
-        <div class="slidecontainer">
-          <p class="sliderheader">Slab Depth: <strong><span id="slabdepth"></span></strong></p><input type="range" min="0" max="50" value="5" class="slider" id="depthslider">
-        </div>
+        <span style="clear: both"></span>
+        <div class="row">
+            <div class="column">
+                <h3>Slab Size</h3>
+                <div class="slidecontainer">
+                  <p class="sliderheader">Slab Width: <strong><span id="slabwidth"></span></strong></p><input type="range" min="0" max="50" value="5" class="slider" id="widthslider">
+                </div>
+                <div class="slidecontainer">
+                  <p class="sliderheader">Slab Depth: <strong><span id="slabdepth"></span></strong></p><input type="range" min="0" max="50" value="5" class="slider" id="depthslider">
+                </div>
 
-        <h3>Randomness</h3>
-        <span id="randomsliders"></span>
-        <div id="AssetSelect" class="modal">
+                <h3>Randomness</h3>
+                <span id="randomsliders"></span>
+                <div id="AssetSelect" class="modal">
 
-          <!-- Modal content -->
-          <div class="modal-content">
-            <div class="modal-body">
-                <div onclick='AssetSelect.style.display = "none";' class="modalClose"><i class="fa fa-close"></i></div>
-                <p>Select an asset:</p>
-                <input type="text" id="assetSearch" onkeyup="searchAssets()" style="font-size: 100%;font-family:Candara, Calibri, Segoe, FontAwesome" placeholder="&#xf002; Search">
-                <div id="assetTable"></div>
+                  <!-- Modal content -->
+                  <div class="modal-content">
+                    <div class="modal-body">
+                        <div onclick='AssetSelect.style.display = "none";' class="modalClose"><i class="fa fa-close"></i></div>
+                        <p>Select an asset:</p>
+                        <input type="text" id="assetSearch" onkeyup="searchAssets()" style="font-size: 100%;font-family:Candara, Calibri, Segoe, FontAwesome" placeholder="&#xf002; Search">
+                        <div id="assetTable"></div>
 
-            
-                <div onclick='AssetSelect.style.display = "none";' class="modalOk"><i class="fa fa-check-square"></i></div>
+                    
+                        <div onclick='AssetSelect.style.display = "none";' class="modalOk"><i class="fa fa-check-square"></i></div>
+                    </div>
+                    
+                  </div>
+
+                </div>
+                <button onClick='AssetSelect.style.display = "block";' class="addbtn"><i class="fa fa-plus"> Add Asset</i></button>
             </div>
-            
-          </div>
-
+            <div class="column">
+                <h3 style="margin-left: 40px">Decoded Results</h3>
+                <p class="output" id="output"></p>
+            </div>
         </div>
-        <button onClick='AssetSelect.style.display = "block";' class="addbtn"><i class="fa fa-plus"> Add Asset</i></button>
     </form>
-    <p style="width: 700px; background: #EEE; margin-left: 10px" id="output"></p>
+    <span style="float: none"></span>
     <div id="snackbar"></div>
     <script>
         function AddAssetToList(nguid, defaultpercent) {
@@ -473,11 +556,11 @@
             }
         }
 
-        var tmpTable = '<table style="margin-top: 20px;"cellspacing="0" cellpadding="0" border="0"><tr><th>Asset Name</th></tr><tr><td><div style="height: 400px; overflow:auto;"><table width="600px" align="left" id="assetTable" cellspacing="0" cellpadding="0" border="1">';
+        var tmpTable = '<table style="margin-top: 20px; width="600px" cellspacing="0" cellpadding="0" border="0"><tr></tr><tr><td colspan="3"><div style="height: 400px; overflow:auto;"><table width="800px" align="left" id="assetTable" cellspacing="0" cellpadding="0" border="1">';
         assets = TalespireSlabs.GetAllAssets();
 
         Object.entries(assets).forEach(function(asset) {
-            tmpTable += "<tr><td>" + asset[1]["name"] + '</td><td><button onClick="AddAssetToList(\'' + asset[0] + '\', 10);AssetSelect.style.display = \'block\';" class="addbtn"><i class="fa fa-plus"> Select</i></button></td></tr>';
+            tmpTable += '<tr><td>' + asset[1]["name"] + '</td><td>' + asset[0] + '</td><td><button onClick="AddAssetToList(\'' + asset[0] + '\', 10);AssetSelect.style.display = \'block\';" class="addbtn"><i class="fa fa-plus"> Select</i></button></td></tr>';
         });
         tmpTable += "</table></div></td></tr></table>";
 
@@ -500,5 +583,8 @@
         });
         
     </script>
+    <div class="footer"><i>See more great projects at <a href="https://talestavern.com/">TalesTavern</a></i>
+        <br>D20ArmyKnife © 2020
+    </div>
 </body>
 </html>
