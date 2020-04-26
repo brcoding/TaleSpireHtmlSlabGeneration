@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Forest Generator</title>
+    <title>Forest Generator v1.3</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAiPFoAAAAAAES7lQBDwJIAP8CVADzAkAA/v5kAQr+RAB48WwBEv5EAN8GSACA8WwA7wJMAV7yeAEyzlwBGvpUASb+ZAD6/kgAhO10AP76WADHCjQCT1sQAPcGTAEvDnQAkPVsAMUVeAEm7lwA4wZEAPMCSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQsYCwEBAQEBAQEBAQEBAQEBEgEBAQEBAQEBAQEBAQEBAQsBAQEBAQEBAQEBAQEBAQEZAQEBAQEBAQEBAQEXHBwBAAEcHAEBAQEBAQEJHBwcFAsVHBwcFgEBAQERHBwcHBwIHBwMHBwcAQEBDBwcHBMcHBwCHBwcBgEBAQQKHAUcHBwOHBwcEAEBAQEBGxwcHBwcGhwcHBwBAQEBARwNHBwcDxwcHBwBAQEBAQEcHBwcHBwcHBwHAQEBAQEBARwcHBwcHBwcAQEBAQEBAQEBHBwcHBwcAQEBAQEBAQEBAQEBHBwDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf4/AAD/fwAA/38AAP9/AADxTwAA4AMAAMABAADAAQAAwAMAAOADAADgBwAA4AcAAPAPAAD4HwAA/j8AAP//AAA=" rel="icon" type="image/x-icon" />
     <!-- Local asset data -->    
@@ -232,6 +232,7 @@
           margin: 15% auto; /* 15% from the top and centered */
 
           padding: 20px;
+          padding-bottom: 30px;
           border: 1px solid #888;
           width: 880px; /* Could be more or less, depending on screen size */
         }
@@ -541,6 +542,13 @@
         }
     }
 
+    function RemoveFromLocal(name) {
+        window.localStorage.removeItem(name);
+        PopulateModalAssets();
+        SwapAssets();
+        ShowMessage(name.substring(name.indexOf('-') + 1) + " has been removed.", 5000);
+    }
+
     function SaveToLocal() {
         var customSlabName = prompt("Custom Slab Name", "");
         console.log("Custom Slab Name: " + customSlabName);
@@ -561,6 +569,7 @@
         }
         window.localStorage.setItem('slab-' + customSlabName, slabValue);
         PopulateModalAssets();
+        SwapAssets();
         ShowMessage("Saved Slab as: " + customSlabName + " <br>To delete or select use the \"Add Asset\" window.", 6000);
 
     }
@@ -625,12 +634,12 @@
                   <div class="modal-content">
                     <div class="modal-body">
                         <div onclick='AssetSelect.style.display = "none";' class="modalClose"><i class="fa fa-close"></i></div>
-                        <p>Select an asset:</p>
-                        <input type="text" id="assetSearch" onkeyup="searchAssets()" style="font-size: 100%;font-family:Candara, Calibri, Segoe, FontAwesome" placeholder="&#xf002; Search"><input onclick="SwapAssets()" style="margin-left: 20px;" type="checkbox" id="custom"><span style="font-size: 90%;">Show Custom Assets</span>
+                        <h3 style="margin-top: -25px">Asset Selection</h3>
+                        <input type="text" id="assetSearch" onkeyup="searchAssets()" style="font-size: 100%;font-family:Candara, Calibri, Segoe, FontAwesome" placeholder="&#xf002; Search"><label><input onclick="SwapAssets()" style="margin-left: 20px;" type="checkbox" id="custom"><span style="font-size: 80%;">Show Custom Assets</span></label>
                         <div style="width: 812px;" id="assetTable"></div>
 
                     
-                        <div onclick='AssetSelect.style.display = "none";' class="modalOk"><i class="fa fa-check-square"></i></div>
+                        <div onclick='AssetSelect.style.display = "none";' class="modalOk"><i class="fa fa-check-square"></i> Done</div>
                     </div>
                     
                   </div>
@@ -647,6 +656,12 @@
     <span style="float: none"></span>
     <div id="snackbar"></div>
     <script>
+        document.querySelector(".modal").addEventListener("click", function(e) {
+            if (e.target.className == "modal") {
+                document.getElementById('AssetSelect').style.display = "none";
+            }
+
+        });
         function SwapAssets() {
             if (document.getElementById("custom").checked) {
                 document.getElementById("standardassets").style.display = "none";
@@ -698,12 +713,12 @@
 
             tmpTable += '<span id="customassets" style="display: none"><table style="margin-top: 20px; width: 810px" cellspacing="0" cellpadding="0" border="0"><tr></tr><tr><td style=" border: 1px solid #AAA" colspan="3"><div style="height: 400px; width: 810px; overflow-y:none; overflow-y:auto;"><table width="790px" align="left" id="assetTable" cellspacing="0" cellpadding="0" border="1">';
             
-            tmpTable += '<tr><th>Name</th><th></th></tr>';
+            tmpTable += '<tr><th>Name</th><th></th><th></th></tr>';
 
             Object.entries(window.localStorage).forEach(function (storeVal) {
                 // console.log(storeVal);
                 if (storeVal[0].startsWith('slab-')) {
-                    tmpTable += '<tr><td>' + storeVal[0].substring(storeVal[0].indexOf('-') + 1) + '</td><td><button onClick="AddAssetToList(\'' + storeVal[0] + '\', 10, true);" class="addbtn"><i class="fa fa-plus"> Select</i></button></td></tr>';
+                    tmpTable += '<tr><td>' + storeVal[0].substring(storeVal[0].indexOf('-') + 1) + '</td><td><button onClick="RemoveFromLocal(\'' + storeVal[0] + '\');" class="addbtn"><i class="fa fa-trash"> Delete</i></button></td><td><button onClick="AddAssetToList(\'' + storeVal[0] + '\', 10, true);" class="addbtn"><i class="fa fa-plus"> Select</i></button></td></tr>';
                 }
             });
 
