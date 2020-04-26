@@ -532,9 +532,8 @@
     }    
 
     function ReadSlab() {
-        //clearPrintResults();
+        clearPrintResults();
         try {
-            printResults(JSON.stringify(TalespireSlabs.DecodeSlabToPayload(document.getElementById("forest").value)));
             printResults(TalespireSlabs.DecodeSlab(document.getElementById("forest").value));
         } catch (err) {
             console.log(err);
@@ -549,8 +548,14 @@
         ShowMessage(name.substring(name.indexOf('-') + 1) + " has been removed.", 5000);
     }
 
+    function ShowSlabDialog() {
+        document.getElementById('slabname').value = "";
+        document.getElementById('SlabNameDialog').style.display = "block";
+    }
+
     function SaveToLocal() {
-        var customSlabName = prompt("Custom Slab Name", "");
+        // var customSlabName = prompt("Custom Slab Name", "");
+        var customSlabName = document.getElementById('slabname').value;
         console.log("Custom Slab Name: " + customSlabName);
         if (customSlabName == null) {
             return;
@@ -612,8 +617,21 @@
           <span class="tooltiptext">Clicking this button will take the values from slab size and randomness below and create a slab that can be pasted in to TaleSpire.</span>
         </span></button>
             <button class="clipboardbutton" id="button" onclick="CopyToClipboard();">Copy To Clipboard <span class="tooltip"><i class="fa fa-question-circle"></i><span class="tooltiptext">This button copies the contents of the above into your clipboard.</span></button>
-            <button class="clipboardbutton" id="button" onclick="SaveToLocal();">Save Custom Slab <span class="tooltip"><i class="fa fa-question-circle"></i><span class="tooltiptext">After pasting a slab you can store it as a custom asset that can be used later to insert as a random asset.</span></button>
+            <button class="clipboardbutton" id="button" onclick="ShowSlabDialog();">Save Custom Slab <span class="tooltip"><i class="fa fa-question-circle"></i><span class="tooltiptext">After pasting a slab you can store it as a custom asset that can be used later to insert as a random asset.</span></button>
             <button style="float: right; " id="button" onclick='ReadSlab();'>Read Pasted Slab <span class="tooltip"><i class="fa fa-question-circle"></i><span class="tooltiptext">Reads the value that has been pasted (from TaleSpire) and prints out the associated data in the Decoded Results.</span></button>
+        </div>
+        <div id="SlabNameDialog" class="modal">
+            <div style="width: 330px; height: 220px" class="modal-content">
+                <div class="modal-body">
+                    <p style="font-size: 80%">Custom Slab Name</p>
+                    <input style="font-size: 90%" type="text" id="slabname" placeholder="Enter Name">
+                    <div style="width: 280px; margin: 10px; text-align: right" class="btn-group">
+                        <button onClick='document.getElementById("SlabNameDialog").style.display = "none";SaveToLocal();'><i class="fa fa-check"> OK</i></button>
+                        <button onClick='document.getElementById("SlabNameDialog").style.display = "none";'><i class="fa fa-times"> Cancel</i></button>
+                    </div>
+
+                </div>
+            </div>
         </div>
         <span style="clear: both"></span>
         <div class="row">
