@@ -59,7 +59,7 @@ var TalespireSlabs = (function () {
 
     var roundNumber = function(num) {
         //return num
-        return Math.round((num + Number.EPSILON) * 100) / 100
+        return num;// Math.round((num + Number.EPSILON) * 100) / 100
     }
 
     var nguidHexToBytes = function(nguid) {
@@ -168,7 +168,7 @@ var TalespireSlabs = (function () {
         return '```' + btoa(String.fromCharCode.apply(null, gzdata)) + '```';
     }
 
-    var ReadSlab = function(data) {
+    var ReadSlab = function(data, getpayload=false) {
         var results = "";
         var decodedAssets = [];
         var bufPtr = 0;
@@ -278,7 +278,7 @@ var TalespireSlabs = (function () {
         bufPtr += 12
         console.log("Union Center: " + JSON.stringify(unionCenter));
         console.log("Union Extents: " + JSON.stringify(unionExtents));
-
+        var payload = []
         var assetIdx = 0;
         for (i = 0; i < decodedAssets.length; i++) {
             var asset = publicAPIs.GetAsset(decodedAssets[i]["nguid"]);
@@ -288,7 +288,17 @@ var TalespireSlabs = (function () {
                 results += "<p><b>NGuid:</b> " + decodedAssets[i]["nguid"] + "</p>";
             }
             var assetCount = decodedAssets[i]["assetCount"];
+            var payloadAssets = [];
             for (var x = 0; x < assetCount; x++) {
+                payloadAssets.push(
+                    {
+                        'rotation': AssetLocations[assetIdx]["rotation"],
+                        'bounds': {
+                            'center': {'x': AssetLocations[assetIdx]["centerX"], 'y': AssetLocations[assetIdx]["centerY"], 'z': AssetLocations[assetIdx]["centerZ"]},
+                            'extents': {'x': AssetLocations[assetIdx]["extentsX"], 'y': AssetLocations[assetIdx]["extentsY"], 'z': AssetLocations[assetIdx]["extentsZ"]},
+                        }
+                    });
+
                 results += "<pre><b style='margin-left: 15px'>Rotation</b>: " + AssetLocations[assetIdx]["rotation"];
                 results += "<br><b style='margin-left: 15px'>Center</b> X: " + roundNumber(AssetLocations[assetIdx]["centerX"], 4) + 
                     " Y: " + roundNumber(AssetLocations[assetIdx]["centerY"], 4) + 
@@ -298,8 +308,13 @@ var TalespireSlabs = (function () {
                     " Z: " + roundNumber(AssetLocations[assetIdx]["extentsZ"], 4) + "</pre>";
                 assetIdx++;
             }
+            payload.push({'nguid': decodedAssets[i]["nguid"], 'assets': payloadAssets})
         }
-        return results;
+        if (getpayload) {
+            return payload;
+        } else {
+            return results;            
+        }
     }
 
     publicAPIs.DecodeSlab = function(paste) {
@@ -332,6 +347,38 @@ var TalespireSlabs = (function () {
         }
 
         return ReadSlab(data);
+    }
+
+    publicAPIs.DecodeSlabToPayload = function(paste) {
+        if (paste.length == 0) {
+            throw "Unable to read slab."
+        }
+        if (!paste.includes("`")) {
+            throw "Invalid paste value" 
+        }
+        paste = paste.replace(/[` ]/g, "")
+        //clearPrintResults();
+
+        // Decode base64 (convert ascii to binary)
+        var strData     = atob(paste);
+        if (strData.length == 0) {
+            throw "Unable to process paste. Base64 decode returned empty results."
+        }
+        // Convert binary string to character-number array
+        var charData    = strData.split('').map(function(x){return x.charCodeAt(0);});
+
+        // Turn number array into byte-array
+        var binData = new Uint8Array(charData);
+
+        var data;
+        try {
+        // Pako magic
+            data = pako.inflate(binData);
+        } catch {
+            throw "Unable to inflate gzip contents. Cannot read slab."
+        }
+
+        return ReadSlab(data, true);
     }
 
     return publicAPIs;

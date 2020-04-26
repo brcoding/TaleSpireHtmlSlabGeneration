@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Forest Generator</title>
+    <title>Forest Generator v1.3</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAiPFoAAAAAAES7lQBDwJIAP8CVADzAkAA/v5kAQr+RAB48WwBEv5EAN8GSACA8WwA7wJMAV7yeAEyzlwBGvpUASb+ZAD6/kgAhO10AP76WADHCjQCT1sQAPcGTAEvDnQAkPVsAMUVeAEm7lwA4wZEAPMCSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQsYCwEBAQEBAQEBAQEBAQEBEgEBAQEBAQEBAQEBAQEBAQsBAQEBAQEBAQEBAQEBAQEZAQEBAQEBAQEBAQEXHBwBAAEcHAEBAQEBAQEJHBwcFAsVHBwcFgEBAQERHBwcHBwIHBwMHBwcAQEBDBwcHBMcHBwCHBwcBgEBAQQKHAUcHBwOHBwcEAEBAQEBGxwcHBwcGhwcHBwBAQEBARwNHBwcDxwcHBwBAQEBAQEcHBwcHBwcHBwHAQEBAQEBARwcHBwcHBwcAQEBAQEBAQEBHBwcHBwcAQEBAQEBAQEBAQEBHBwDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf4/AAD/fwAA/38AAP9/AADxTwAA4AMAAMABAADAAQAAwAMAAOADAADgBwAA4AcAAPAPAAD4HwAA/j8AAP//AAA=" rel="icon" type="image/x-icon" />
     <!-- Local asset data -->    
@@ -232,8 +232,9 @@
           margin: 15% auto; /* 15% from the top and centered */
 
           padding: 20px;
+          padding-bottom: 30px;
           border: 1px solid #888;
-          width: 850px; /* Could be more or less, depending on screen size */
+          width: 880px; /* Could be more or less, depending on screen size */
         }
 
         .modal-body {
@@ -291,6 +292,7 @@
         th {  
             background: #DFDFDF;  /* Darken header a bit */
             font-weight: bold;
+            text-align: left
         }
 
         td {  
@@ -374,20 +376,26 @@
         }
     ];
 
-    function ShowError(errorMessage) {
+    function ShowError(errorMessage, timeout=3000) {
         var x = document.getElementById("snackbar");
         x.innerHTML = errorMessage;
         x.style.backgroundColor = "red";
         x.className = "show";
-        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        var timeoutSeconds = ((timeout / 1000) - 0.5) + "s";
+        x.style.webkitAnimation = "fadein 0.5s, fadeout 0.5s " + timeoutSeconds;
+        x.style.animation = "fadein 0.5s, fadeout 0.5s " + timeoutSeconds;
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, timeout);
     }
 
-    function ShowMessage(message) {
+    function ShowMessage(message, timeout=3000) {
         var x = document.getElementById("snackbar");
         x.innerHTML = message;
         x.style.backgroundColor = "black";
         x.className = "show";
-        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);          
+        var timeoutSeconds = ((timeout / 1000) - 0.5) + "s";
+        x.style.webkitAnimation = "fadein 0.5s, fadeout 0.5s " + timeoutSeconds;
+        x.style.animation = "fadein 0.5s, fadeout 0.5s " + timeoutSeconds;
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, timeout);          
     }
     function CopyToClipboard() {
         var forest = document.getElementById("forest");
@@ -431,6 +439,57 @@
         return {'nguid': nguid, 'assets': assets};
     }
 
+    function AddCustomAsset(customName, width, depth, center_height, percentage) {
+        console.log("Adding custom asset: " + customName + " Width: " + width + " Depth: " + depth + " Height: " + center_height + " Percentage: " + percentage);
+        var customAssetPayload = TalespireSlabs.DecodeSlabToPayload(window.localStorage.getItem(customName));
+
+        var assetPayload = [];
+        var centerMin = [0,0,0];
+        for (var a = 0; a < customAssetPayload.length; a++) {
+            if (a > 0) {
+                break;
+            }
+            for (var x = 0; x < customAssetPayload[a]['assets'].length; x++) {
+                var asset = customAssetPayload[a]['assets'][x];
+                if (a == 0 && x == 0) {
+                    centerMin = [asset['bounds']['center']['x'], asset['bounds']['center']['y'], asset['bounds']['center']['z']]
+                }
+                if (a == 0) {
+                    centerMin[0] = Math.min(asset['bounds']['center']['x'], centerMin[0]);
+                    centerMin[1] = Math.min(asset['bounds']['center']['y'], centerMin[1]);
+                    centerMin[2] = Math.min(asset['bounds']['center']['z'], centerMin[2]);                            
+                }
+            }
+        }        
+        for (var w = 0; w < width; w++) {
+            for (var d = 0; d < depth; d++) {
+                if ((Math.floor(random() * 100) + 1) > percentage) {
+                    continue;
+                }
+
+
+                for (var a = 0; a < customAssetPayload.length; a++) {
+                    var assets = [];
+                    //var centerMin;
+                    for (var x = 0; x < customAssetPayload[a]['assets'].length; x++) {
+                        var asset = customAssetPayload[a]['assets'][x];
+                        assets.push({'rotation': asset['rotation'],
+                            'bounds': 
+                            {
+                                'center': {'x': (asset['bounds']['center']['x'] - centerMin[0]) + (w*2), 'y': asset['bounds']['center']['y'] + 0.8, 'z': (asset['bounds']['center']['z'] - centerMin[2]) + d*2},
+                                'extents': {'x': 1, 'y': 1, 'z': 1}
+                            }                    
+                        });
+                    }
+                    // console.log("guid: " + customAssetPayload[a]['nguid'] + " Asset Count: " + assets.length);
+
+                    assetPayload.push({'nguid': customAssetPayload[a]['nguid'], 'assets': assets})
+                }
+            }
+        }
+        return assetPayload;
+    }
+
     function WriteRandomForest() { 
         clearPrintResults();
 
@@ -444,24 +503,77 @@
 
         const sliderpercents = document.querySelectorAll("input[nguid]");
         sliderpercents.forEach(function(percent) {
-            slab.push(AddAsset(percent.getAttribute("nguid"), width, depth, 1.38, percent.value));
+            if (percent.getAttribute("custom")) {
+                var customAssetData = AddCustomAsset(percent.getAttribute("nguid"), width, depth, 1.625, percent.value);
+                for (var i = 0; i < customAssetData.length; i++) {
+                    var found = false;
+                    for (var s = 0; s < slab.length; s++) {
+                        if (slab[s]['nguid'] == customAssetData[i]['nguid']) {
+                            found = true;
+                            for (var a = 0; a < customAssetData[i]['assets'].length; a++) {
+                                slab[s]['assets'].push(customAssetData[i]['assets'][a]);
+                            }
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        slab.push(customAssetData[i]);
+                    }
+                }
+            } else {
+                slab.push(AddAsset(percent.getAttribute("nguid"), width, depth, 1.38, percent.value));
+            }
         });
 
-        console.log(slab);
+        // console.log(slab);
         var results = TalespireSlabs.CreateSlab(slab);
         document.getElementById("forest").value = results;
         printResults(TalespireSlabs.DecodeSlab(results));
     }    
 
     function ReadSlab() {
-        clearPrintResults();
+        //clearPrintResults();
         try {
+            printResults(JSON.stringify(TalespireSlabs.DecodeSlabToPayload(document.getElementById("forest").value)));
             printResults(TalespireSlabs.DecodeSlab(document.getElementById("forest").value));
         } catch (err) {
             console.log(err);
             ShowError(err);
         }
     }
+
+    function RemoveFromLocal(name) {
+        window.localStorage.removeItem(name);
+        PopulateModalAssets();
+        SwapAssets();
+        ShowMessage(name.substring(name.indexOf('-') + 1) + " has been removed.", 5000);
+    }
+
+    function SaveToLocal() {
+        var customSlabName = prompt("Custom Slab Name", "");
+        console.log("Custom Slab Name: " + customSlabName);
+        if (customSlabName == null) {
+            return;
+        }
+        if (customSlabName == "") {
+            ShowError("You must give the slab a name.");
+        }
+        clearPrintResults();
+        var slabValue = document.getElementById("forest").value;
+        try {
+            printResults(TalespireSlabs.DecodeSlab(slabValue));
+        } catch (err) {
+            console.log(err);
+            ShowError(err);
+            return;
+        }
+        window.localStorage.setItem('slab-' + customSlabName, slabValue);
+        PopulateModalAssets();
+        SwapAssets();
+        ShowMessage("Saved Slab as: " + customSlabName + " <br>To delete or select use the \"Add Asset\" window.", 6000);
+
+    }
+
     function searchAssets() {
       // Declare variables
       var input, filter, table, tr, td, i, txtValue;
@@ -500,6 +612,7 @@
           <span class="tooltiptext">Clicking this button will take the values from slab size and randomness below and create a slab that can be pasted in to TaleSpire.</span>
         </span></button>
             <button class="clipboardbutton" id="button" onclick="CopyToClipboard();">Copy To Clipboard <span class="tooltip"><i class="fa fa-question-circle"></i><span class="tooltiptext">This button copies the contents of the above into your clipboard.</span></button>
+            <button class="clipboardbutton" id="button" onclick="SaveToLocal();">Save Custom Slab <span class="tooltip"><i class="fa fa-question-circle"></i><span class="tooltiptext">After pasting a slab you can store it as a custom asset that can be used later to insert as a random asset.</span></button>
             <button style="float: right; " id="button" onclick='ReadSlab();'>Read Pasted Slab <span class="tooltip"><i class="fa fa-question-circle"></i><span class="tooltiptext">Reads the value that has been pasted (from TaleSpire) and prints out the associated data in the Decoded Results.</span></button>
         </div>
         <span style="clear: both"></span>
@@ -507,10 +620,10 @@
             <div class="column">
                 <h3>Slab Size</h3>
                 <div class="slidecontainer">
-                  <p class="sliderheader">Slab Width: <strong><span id="slabwidth"></span></strong></p><input type="range" min="0" max="50" value="5" class="slider" id="widthslider">
+                  <p class="sliderheader">Slab Width: <strong><span id="slabwidth"></span></strong></p><input type="range" min="1" max="50" value="5" class="slider" id="widthslider">
                 </div>
                 <div class="slidecontainer">
-                  <p class="sliderheader">Slab Depth: <strong><span id="slabdepth"></span></strong></p><input type="range" min="0" max="50" value="5" class="slider" id="depthslider">
+                  <p class="sliderheader">Slab Depth: <strong><span id="slabdepth"></span></strong></p><input type="range" min="1" max="50" value="5" class="slider" id="depthslider">
                 </div>
 
                 <h3>Randomness</h3>
@@ -521,12 +634,12 @@
                   <div class="modal-content">
                     <div class="modal-body">
                         <div onclick='AssetSelect.style.display = "none";' class="modalClose"><i class="fa fa-close"></i></div>
-                        <p>Select an asset:</p>
-                        <input type="text" id="assetSearch" onkeyup="searchAssets()" style="font-size: 100%;font-family:Candara, Calibri, Segoe, FontAwesome" placeholder="&#xf002; Search">
-                        <div id="assetTable"></div>
+                        <h3 style="margin-top: -25px">Asset Selection</h3>
+                        <input type="text" id="assetSearch" onkeyup="searchAssets()" style="font-size: 100%;font-family:Candara, Calibri, Segoe, FontAwesome" placeholder="&#xf002; Search"><label><input onclick="SwapAssets()" style="margin-left: 20px;" type="checkbox" id="custom"><span style="font-size: 80%;">Show Custom Assets</span></label>
+                        <div style="width: 812px;" id="assetTable"></div>
 
                     
-                        <div onclick='AssetSelect.style.display = "none";' class="modalOk"><i class="fa fa-check-square"></i></div>
+                        <div onclick='AssetSelect.style.display = "none";' class="modalOk"><i class="fa fa-check-square"></i> Done</div>
                     </div>
                     
                   </div>
@@ -543,31 +656,77 @@
     <span style="float: none"></span>
     <div id="snackbar"></div>
     <script>
-        function AddAssetToList(nguid, defaultpercent) {
+        document.querySelector(".modal").addEventListener("click", function(e) {
+            if (e.target.className == "modal") {
+                document.getElementById('AssetSelect').style.display = "none";
+            }
+
+        });
+        function SwapAssets() {
+            if (document.getElementById("custom").checked) {
+                document.getElementById("standardassets").style.display = "none";
+                document.getElementById("customassets").style.display = "block";                
+            } else {
+                document.getElementById("standardassets").style.display = "block";
+                document.getElementById("customassets").style.display = "none";
+            }
+        }
+        function AddAssetToList(nguid, defaultpercent, custom=false) {
             var sliderdiv = document.createElement("div");
             sliderdiv.style.width = "400px";
-            nguid = nguid.trim();
 
-            var asset = TalespireSlabs.GetAsset(nguid);
+            if (custom) {
+                sliderdiv.innerHTML = '<p class="sliderheader"><button onClick="this.parentNode.parentNode.innerHTML=\'\';" class="btn" id="' + nguid + 'removebtn"><i class="fa fa-close"></i></button> Custom - ' + nguid.substring(nguid.indexOf('-') + 1) + ': <strong><span id="' + nguid + 'percent"></span>%</strong> </p><input type="range" min="0" max="100" nguid="' + nguid + '" custom="true" value="' + defaultpercent + '" class="slider" id="' + nguid + 'slider">';
+                document.getElementById("randomsliders").appendChild(sliderdiv);
+                var randslider = document.getElementById(nguid + "slider");
+                document.getElementById(nguid + "percent").innerHTML = randslider.value;
+                randslider.oninput = function() {
+                    document.getElementById(nguid + "percent").innerHTML = this.value;
+                }
 
-            sliderdiv.innerHTML = '<p class="sliderheader">' + asset['name'] + ': <strong><span id="' + nguid + 'percent"></span>%</strong> <button onClick="this.parentNode.parentNode.innerHTML=\'\';" class="btn" id="' + nguid + 'removebtn"><i class="fa fa-close"></i></button></p><input type="range" min="0" max="100" nguid="' + nguid + '" value="' + defaultpercent + '" class="slider" id="' + nguid + 'slider">';
-            document.getElementById("randomsliders").appendChild(sliderdiv);
-            var randslider = document.getElementById(nguid + "slider");
-            document.getElementById(nguid + "percent").innerHTML = randslider.value;
-            randslider.oninput = function() {
-                document.getElementById(nguid + "percent").innerHTML = this.value;
+            } else {
+
+                nguid = nguid.trim();
+
+                var asset = TalespireSlabs.GetAsset(nguid);
+
+                sliderdiv.innerHTML = '<p class="sliderheader"><button onClick="this.parentNode.parentNode.innerHTML=\'\';" class="btn" id="' + nguid + 'removebtn"><i class="fa fa-close"></i></button> ' + asset['name'] + ': <strong><span id="' + nguid + 'percent"></span>%</strong> </p><input type="range" min="0" max="100" nguid="' + nguid + '" value="' + defaultpercent + '" class="slider" id="' + nguid + 'slider">';
+                document.getElementById("randomsliders").appendChild(sliderdiv);
+                var randslider = document.getElementById(nguid + "slider");
+                document.getElementById(nguid + "percent").innerHTML = randslider.value;
+                randslider.oninput = function() {
+                    document.getElementById(nguid + "percent").innerHTML = this.value;
+                }
             }
         }
 
-        var tmpTable = '<table style="margin-top: 20px; width="600px" cellspacing="0" cellpadding="0" border="0"><tr></tr><tr><td colspan="3"><div style="height: 400px; overflow:auto;"><table width="800px" align="left" id="assetTable" cellspacing="0" cellpadding="0" border="1">';
-        assets = TalespireSlabs.GetAllAssets();
+        function PopulateModalAssets() {
+            var tmpTable = '<span id="standardassets" style="display: block;"><table style="margin-top: 20px; width: 810px" cellspacing="0" cellpadding="0" border="0"><tr></tr><tr><td style=" border: 1px solid #AAA" colspan="3"><div style="height: 400px; width: 810px; overflow-y:none; overflow-y:auto;"><table width="790px" align="left" id="assetTable" cellspacing="0" cellpadding="0" border="1">';
+            var assets = TalespireSlabs.GetAllAssets();
 
-        Object.entries(assets).forEach(function(asset) {
-            tmpTable += '<tr><td>' + asset[1]["name"] + '</td><td>' + asset[0] + '</td><td><button onClick="AddAssetToList(\'' + asset[0] + '\', 10);AssetSelect.style.display = \'block\';" class="addbtn"><i class="fa fa-plus"> Select</i></button></td></tr>';
-        });
-        tmpTable += "</table></div></td></tr></table>";
+            tmpTable += '<tr><th>Name</th><th>GUID</th><th></th></tr>';
 
-        assetTable.innerHTML = tmpTable;
+            Object.entries(assets).forEach(function(asset) {
+                tmpTable += '<tr><td>' + asset[1]["name"] + '</td><td>' + asset[0] + '</td><td><button onClick="AddAssetToList(\'' + asset[0] + '\', 10);" class="addbtn"><i class="fa fa-plus"> Select</i></button></td></tr>';
+            });
+            tmpTable += "</table></div></td></tr></table></span>";
+
+            tmpTable += '<span id="customassets" style="display: none"><table style="margin-top: 20px; width: 810px" cellspacing="0" cellpadding="0" border="0"><tr></tr><tr><td style=" border: 1px solid #AAA" colspan="3"><div style="height: 400px; width: 810px; overflow-y:none; overflow-y:auto;"><table width="790px" align="left" id="assetTable" cellspacing="0" cellpadding="0" border="1">';
+            
+            tmpTable += '<tr><th>Name</th><th></th><th></th></tr>';
+
+            Object.entries(window.localStorage).forEach(function (storeVal) {
+                // console.log(storeVal);
+                if (storeVal[0].startsWith('slab-')) {
+                    tmpTable += '<tr><td>' + storeVal[0].substring(storeVal[0].indexOf('-') + 1) + '</td><td><button onClick="RemoveFromLocal(\'' + storeVal[0] + '\');" class="addbtn"><i class="fa fa-trash"> Delete</i></button></td><td><button onClick="AddAssetToList(\'' + storeVal[0] + '\', 10, true);" class="addbtn"><i class="fa fa-plus"> Select</i></button></td></tr>';
+                }
+            });
+
+            tmpTable += "</table></div></td></tr></table></span>";
+            document.getElementById("assetTable").innerHTML = tmpTable;
+        }
+
+        PopulateModalAssets();
 
         var widthslider = document.getElementById("widthslider");
         document.getElementById("slabwidth").innerHTML = widthslider.value;

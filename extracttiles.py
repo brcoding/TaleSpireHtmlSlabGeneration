@@ -19,6 +19,7 @@ for root,d_names,f_names in os.walk(path):
             asset = json.loads(currentFile.read())
             nguid = asset["GUID"]
             asset_name = asset["boardAssetName"]
+            board_asset_group = asset["boardAssetGroup"]
             width = 0
             depth = 0
             for tag in asset["Tags"]:
@@ -34,6 +35,6 @@ for root,d_names,f_names in os.walk(path):
                 width = asset["assetLoaders"][0]["occluderInfo"]["Width"]
             if depth == 0:
                 depth = asset["assetLoaders"][0]["occluderInfo"]["Depth"]
-            output[nguid] = {"name": asset_name, "width": width, "height": height, "depth": depth}
+            output[nguid] = {"name": asset_name, "group": board_asset_group, "width": width, "height": height, "depth": depth}
 with open("assetdata.js", "w") as fout:
     fout.write("asset_data = " + json.dumps(output) + ";")
