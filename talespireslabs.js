@@ -321,11 +321,7 @@ var TalespireSlabs = (function () {
         if (paste.length == 0) {
             throw "Unable to read slab."
         }
-        if (!paste.includes("`")) {
-            throw "Invalid paste value" 
-        }
         paste = paste.replace(/[` ]/g, "")
-        //clearPrintResults();
 
         // Decode base64 (convert ascii to binary)
         var strData     = atob(paste);
@@ -353,11 +349,8 @@ var TalespireSlabs = (function () {
         if (paste.length == 0) {
             throw "Unable to read slab."
         }
-        if (!paste.includes("`")) {
-            throw "Invalid paste value" 
-        }
+
         paste = paste.replace(/[` ]/g, "")
-        //clearPrintResults();
 
         // Decode base64 (convert ascii to binary)
         var strData     = atob(paste);
