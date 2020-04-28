@@ -349,32 +349,154 @@
         }
     </style>
     <script>
-    var prop_assets = [
-        {
-            "nguid": "fee2bce5-fc53-4eab-bcba-0d7a73e84b49",
-            "defaultpercent": 40,
+    var builtInCustoms = {
+        "builtin-Standard Stacked Pine": "```H4sIAAAAAAAACzv369xFRgZmBu1UR3dX5SWe+65a1e96KV3HyMDA8KspLNDJ+YZr493Nsr9Un04AickzGaVLfn3ltJyR75H7hpo8kBgDw56DDhEJDkCGPRjPr4PQ////B8kxMHywh8sxKEDpBnuInAKm3HYGB4icAMJMKBsADC5RqbAAAAA=```",
+
+        "builtin-Short Stacked Pine": "```H4sIAAAAAAAACzv369xFRgYmBu1UR3dX5SWe+65a1e96KV3HyMDAIM9klC759ZXTcka+R+4bavJAYgwMVw46RAg4MDAoADGDPcP8OnswvXiCPUgOKG4PlwOzgbTz2nsQuQtIchfAcgAQOD7pgAAAAA==```",
+    };
+    var presetAssets = {
+        "mixed": {
+            "floors": ["3911d10d-142b-4f33-9fea-5d3a10c53781", "01c3a210-94fb-449f-8c47-993eda3e7126"],
+            "randoms": [
+            {
+                "nguid": "fee2bce5-fc53-4eab-bcba-0d7a73e84b49",
+                "defaultpercent": 40,
+            },
+            {
+                "nguid": "d5b7910a-ae06-4ad3-91f6-cbbd8782bbea",
+                "defaultpercent": 10,
+            },
+            {
+                "nguid": "b557beec-e795-4a65-99c4-0bbb0827077d",
+                "defaultpercent": 10,
+            },
+            {
+                "nguid": "4741652b-2345-49a4-bed5-3a7fbae91b7e",
+                "defaultpercent": 10,
+            },
+            {
+                "nguid": "ed9bc853-bed5-443c-b45f-a7133d55011a",
+                "defaultpercent": 10,
+            },
+            {
+                "nguid": "ff966bc3-dd95-4ca9-a217-1ca16fce6b52",
+                "defaultpercent": 10,
+            }
+            ]
         },
-        {
-            "nguid": "d5b7910a-ae06-4ad3-91f6-cbbd8782bbea",
-            "defaultpercent": 10,
-        },
-        {
-            "nguid": "b557beec-e795-4a65-99c4-0bbb0827077d",
-            "defaultpercent": 10,
-        },
-        {
-            "nguid": "4741652b-2345-49a4-bed5-3a7fbae91b7e",
-            "defaultpercent": 10,
-        },
-        {
-            "nguid": "ed9bc853-bed5-443c-b45f-a7133d55011a",
-            "defaultpercent": 10,
-        },
-        {
-            "nguid": "ff966bc3-dd95-4ca9-a217-1ca16fce6b52",
-            "defaultpercent": 10,
-        }
-    ];
+        "sparsepine": {
+            "floors": ["3911d10d-142b-4f33-9fea-5d3a10c53781", "01c3a210-94fb-449f-8c47-993eda3e7126"],
+            "randoms": [
+            {
+                "nguid": "fee2bce5-fc53-4eab-bcba-0d7a73e84b49",
+                "defaultpercent": 40,
+            },
+            {
+                "nguid": "b557beec-e795-4a65-99c4-0bbb0827077d",
+                "defaultpercent": 10,
+            },
+            {
+                "nguid": "builtin-Standard Stacked Pine",
+                "defaultpercent": 10,
+            },
+            {
+                "nguid": "builtin-Short Stacked Pine",
+                "defaultpercent": 10,
+            },
+            {
+                "nguid": "ff966bc3-dd95-4ca9-a217-1ca16fce6b52",
+                "defaultpercent": 10,
+            },
+            {
+                "nguid": "4741652b-2345-49a4-bed5-3a7fbae91b7e",
+                "defaultpercent": 10,
+            }
+        ]},
+        "heavypine": {
+            "floors": ["01c3a210-94fb-449f-8c47-993eda3e7126"],
+            "randoms": [
+            {
+                "nguid": "fee2bce5-fc53-4eab-bcba-0d7a73e84b49",
+                "defaultpercent": 40,
+            },
+            {
+                "nguid": "b557beec-e795-4a65-99c4-0bbb0827077d",
+                "defaultpercent": 10,
+            },
+            {
+                "nguid": "builtin-Standard Stacked Pine",
+                "defaultpercent": 40,
+            },
+            {
+                "nguid": "builtin-Short Stacked Pine",
+                "defaultpercent": 30,
+            },
+            {
+                "nguid": "ff966bc3-dd95-4ca9-a217-1ca16fce6b52",
+                "defaultpercent": 10,
+            },
+            {
+                "nguid": "4741652b-2345-49a4-bed5-3a7fbae91b7e",
+                "defaultpercent": 10,
+            }
+        ]},
+        "sparsedead": {
+            "floors": ["01c3a210-94fb-449f-8c47-993eda3e7126", "0582fb0c-9fd0-4355-9bf8-821027ecc74d", "3911d10d-142b-4f33-9fea-5d3a10c53781", "3911d10d-142b-4f33-9fea-5d3a10c53781"],
+            "randoms": [
+            {
+                "nguid": "fee2bce5-fc53-4eab-bcba-0d7a73e84b49",
+                "defaultpercent": 30,
+            },
+            {
+                "nguid": "b557beec-e795-4a65-99c4-0bbb0827077d",
+                "defaultpercent": 20,
+            },
+            {
+                "nguid": "ed9bc853-bed5-443c-b45f-a7133d55011a",
+                "defaultpercent": 7,
+            },
+            {
+                "nguid": "80c2e070-10eb-4608-87a7-fa3d75e929c2",
+                "defaultpercent": 10,
+            },
+            {
+                "nguid": "12f8679e-6100-4da2-a3bd-a3fcc925ab30",
+                "defaultpercent": 6,
+            },
+            {
+                "nguid": "2aeacfa9-b84d-418f-86c7-cdb85e2f4c13",
+                "defaultpercent": 6,
+            }
+        ]},
+        "heavydead": {
+            "floors": ["01c3a210-94fb-449f-8c47-993eda3e7126", "0582fb0c-9fd0-4355-9bf8-821027ecc74d", "3911d10d-142b-4f33-9fea-5d3a10c53781", "3911d10d-142b-4f33-9fea-5d3a10c53781"],
+            "randoms": [
+            {
+                "nguid": "fee2bce5-fc53-4eab-bcba-0d7a73e84b49",
+                "defaultpercent": 30,
+            },
+            {
+                "nguid": "b557beec-e795-4a65-99c4-0bbb0827077d",
+                "defaultpercent": 20,
+            },
+            {
+                "nguid": "ed9bc853-bed5-443c-b45f-a7133d55011a",
+                "defaultpercent": 20,
+            },
+            {
+                "nguid": "80c2e070-10eb-4608-87a7-fa3d75e929c2",
+                "defaultpercent": 20,
+            },
+            {
+                "nguid": "12f8679e-6100-4da2-a3bd-a3fcc925ab30",
+                "defaultpercent": 10,
+            },
+            {
+                "nguid": "2aeacfa9-b84d-418f-86c7-cdb85e2f4c13",
+                "defaultpercent": 10,
+            }
+        ]}
+    };
 
     function ShowError(errorMessage, timeout=3000) {
         var x = document.getElementById("snackbar");
@@ -418,6 +540,37 @@
         return x - Math.floor(x);
     }
 
+    function AddFloor(nguids, width, depth, center_height) {
+        //console.log("Adding asset: " + nguid + " Width: " + width + " Depth: " + depth + " Height: " + center_height + " Percentage: " + percentage);
+        
+        var nguidAssets = [];
+        nguids.forEach(function(nguid) {
+            nguidAssets.push(TalespireSlabs.GetAsset(nguid));
+        });
+        var output = {};
+
+        for (var w = 0; w < width; w++) {
+            for (var d = 0; d < depth; d++) {
+                var selectedAsset = Math.floor(random() * nguidAssets.length);
+                if (output[nguids[selectedAsset]] == null) {
+                    output[nguids[selectedAsset]] = [];
+                }
+                output[nguids[selectedAsset]].push({'rotation': Math.floor(Math.random() * 3) * 4,
+                    'bounds': 
+                    {
+                        'center': {'x': w*2, 'y': center_height, 'z': d*2},
+                        'extents': {'x': 1, 'y': 1, 'z': 1}
+                    }
+                });
+            }
+        }
+        var response = [];
+        Object.entries(output).forEach(function(outputItem) {
+           response.push({'nguid': outputItem[0], 'assets': outputItem[1]});
+        });
+        return response;
+    }
+
     function AddAsset(nguid, width, depth, center_height, percentage) {
         console.log("Adding asset: " + nguid + " Width: " + width + " Depth: " + depth + " Height: " + center_height + " Percentage: " + percentage);
         var asset = TalespireSlabs.GetAsset(nguid);
@@ -441,7 +594,12 @@
 
     function AddCustomAsset(customName, width, depth, center_height, percentage) {
         console.log("Adding custom asset: " + customName + " Width: " + width + " Depth: " + depth + " Height: " + center_height + " Percentage: " + percentage);
-        var customAssetPayload = TalespireSlabs.DecodeSlabToPayload(window.localStorage.getItem(customName));
+        var customAssetPayload;
+        if (customName.startsWith('builtin')) {
+            customAssetPayload = TalespireSlabs.DecodeSlabToPayload(builtInCustoms[customName]);
+        } else {
+            customAssetPayload = TalespireSlabs.DecodeSlabToPayload(window.localStorage.getItem(customName));
+        }
 
         var assetPayload = [];
         var centerMin = [0,0,0];
@@ -498,8 +656,13 @@
         var width = document.getElementById("widthslider").value;
         var depth = document.getElementById("depthslider").value;
 
-        var grass_guid = "01c3a210-94fb-449f-8c47-993eda3e7126";
-        slab.push(AddAsset(grass_guid, width, depth, 1, 100));
+        floors = AddFloor(presetAssets[document.getElementById("presets").value]['floors'], width, depth, 1);
+        floors.forEach(function (floor) {
+            slab.push(floor);
+        });
+
+        // var grass_guid = "01c3a210-94fb-449f-8c47-993eda3e7126";
+        // slab.push(AddAsset(grass_guid, width, depth, 1, 100));
 
         const sliderpercents = document.querySelectorAll("input[nguid]");
         sliderpercents.forEach(function(percent) {
@@ -636,7 +799,17 @@
         <span style="clear: both"></span>
         <div class="row">
             <div class="column">
+
+                <div style="padding-top: 25px; float: right"><label>Presets
+                <select id="presets" onchange="PopulateAssetList(presetAssets[this.value]);">
+                  <option value="mixed" selected="selected">Mixed Forest</option>
+                  <option value="sparsepine">Sparse Pine Forest</option>
+                  <option value="heavypine">Heavy Pine Forest</option>
+                  <option value="sparsedead">Sparse Dead Forest</option>
+                  <option value="heavydead">Heavy Dead Forest</option>
+                </select></div>
                 <h3>Slab Size</h3>
+
                 <div class="slidecontainer">
                   <p class="sliderheader">Slab Width: <strong><span id="slabwidth"></span></strong></p><input type="range" min="1" max="50" value="5" class="slider" id="widthslider">
                 </div>
@@ -757,11 +930,18 @@
           document.getElementById("slabdepth").innerHTML = this.value;
         }
 
-
-        prop_assets.forEach(function(prop_asset){
-            AddAssetToList(prop_asset['nguid'], prop_asset['defaultpercent']);
-        });
+        function PopulateAssetList(assetList) {
+            document.getElementById("randomsliders").innerHTML = "";
+            assetList['randoms'].forEach(function(prop_asset){
+                if (prop_asset['nguid'].startsWith('builtin')) {
+                    AddAssetToList(prop_asset['nguid'], prop_asset['defaultpercent'], true);
+                } else {
+                    AddAssetToList(prop_asset['nguid'], prop_asset['defaultpercent']);
+                }
+            });
+        }
         
+        PopulateAssetList(presetAssets['mixed']);
     </script>
     <div class="footer"><i>See more great projects at <a href="https://talestavern.com/">TalesTavern</a></i>
         <br>D20ArmyKnife © 2020
