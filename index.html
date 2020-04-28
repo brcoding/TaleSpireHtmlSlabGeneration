@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Forest Generator v1.3</title>
+    <title>Forest Generator v1.5</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAiPFoAAAAAAES7lQBDwJIAP8CVADzAkAA/v5kAQr+RAB48WwBEv5EAN8GSACA8WwA7wJMAV7yeAEyzlwBGvpUASb+ZAD6/kgAhO10AP76WADHCjQCT1sQAPcGTAEvDnQAkPVsAMUVeAEm7lwA4wZEAPMCSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQsYCwEBAQEBAQEBAQEBAQEBEgEBAQEBAQEBAQEBAQEBAQsBAQEBAQEBAQEBAQEBAQEZAQEBAQEBAQEBAQEXHBwBAAEcHAEBAQEBAQEJHBwcFAsVHBwcFgEBAQERHBwcHBwIHBwMHBwcAQEBDBwcHBMcHBwCHBwcBgEBAQQKHAUcHBwOHBwcEAEBAQEBGxwcHBwcGhwcHBwBAQEBARwNHBwcDxwcHBwBAQEBAQEcHBwcHBwcHBwHAQEBAQEBARwcHBwcHBwcAQEBAQEBAQEBHBwcHBwcAQEBAQEBAQEBAQEBHBwDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf4/AAD/fwAA/38AAP9/AADxTwAA4AMAAMABAADAAQAAwAMAAOADAADgBwAA4AcAAPAPAAD4HwAA/j8AAP//AAA=" rel="icon" type="image/x-icon" />
     <!-- Local asset data -->    
@@ -625,21 +625,21 @@
                     continue;
                 }
 
-
+                newRotation = Math.floor(Math.random() * 3) * 4
                 for (var a = 0; a < customAssetPayload.length; a++) {
                     var assets = [];
                     //var centerMin;
                     for (var x = 0; x < customAssetPayload[a]['assets'].length; x++) {
                         var asset = customAssetPayload[a]['assets'][x];
-                        assets.push({'rotation': asset['rotation'],
+                        assets.push({'rotation': newRotation + asset['rotation'],
                             'bounds': 
                             {
-                                'center': {'x': (asset['bounds']['center']['x'] - centerMin[0]) + (w*2), 'y': asset['bounds']['center']['y'] + 0.8, 'z': (asset['bounds']['center']['z'] - centerMin[2]) + d*2},
-                                'extents': {'x': 1, 'y': 1, 'z': 1}
+                                'center': {'x': (asset['bounds']['center']['x'] - centerMin[0]) + (w*2), 'y': asset['bounds']['center']['y'] - asset['bounds']['extents']['y'] + center_height, 'z': (asset['bounds']['center']['z'] - centerMin[2]) + d*2},
+                                'extents': {'x': asset['bounds']['extents']['x'], 'y': 1, 'z': asset['bounds']['extents']['z']}
                             }                    
                         });
                     }
-                    // console.log("guid: " + customAssetPayload[a]['nguid'] + " Asset Count: " + assets.length);
+                    console.log("guid: " + customAssetPayload[a]['nguid'] + " Asset Count: " + assets.length);
 
                     assetPayload.push({'nguid': customAssetPayload[a]['nguid'], 'assets': assets})
                 }
@@ -667,7 +667,7 @@
         const sliderpercents = document.querySelectorAll("input[nguid]");
         sliderpercents.forEach(function(percent) {
             if (percent.getAttribute("custom")) {
-                var customAssetData = AddCustomAsset(percent.getAttribute("nguid"), width, depth, 1.625, percent.value);
+                var customAssetData = AddCustomAsset(percent.getAttribute("nguid"), width, depth, 1.38, percent.value);
                 for (var i = 0; i < customAssetData.length; i++) {
                     var found = false;
                     for (var s = 0; s < slab.length; s++) {
