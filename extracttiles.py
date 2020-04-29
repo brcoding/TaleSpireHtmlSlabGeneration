@@ -30,7 +30,7 @@ for root,d_names,f_names in os.walk(path):
                     except ValueError:
                         print("Invalid tag with X")
                         pass
-            height = asset["assetLoaders"][0]["occluderInfo"]["Height"]
+            height = asset["colliderBounds"][0]["m_Extent"]["y"]
             if width == 0:
                 width = asset["assetLoaders"][0]["occluderInfo"]["Width"]
             if depth == 0:

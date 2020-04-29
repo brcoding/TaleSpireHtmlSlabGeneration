@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Forest Generator v1.6</title>
+    <title>Forest Generator v1.7</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAiPFoAAAAAAES7lQBDwJIAP8CVADzAkAA/v5kAQr+RAB48WwBEv5EAN8GSACA8WwA7wJMAV7yeAEyzlwBGvpUASb+ZAD6/kgAhO10AP76WADHCjQCT1sQAPcGTAEvDnQAkPVsAMUVeAEm7lwA4wZEAPMCSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQsYCwEBAQEBAQEBAQEBAQEBEgEBAQEBAQEBAQEBAQEBAQsBAQEBAQEBAQEBAQEBAQEZAQEBAQEBAQEBAQEXHBwBAAEcHAEBAQEBAQEJHBwcFAsVHBwcFgEBAQERHBwcHBwIHBwMHBwcAQEBDBwcHBMcHBwCHBwcBgEBAQQKHAUcHBwOHBwcEAEBAQEBGxwcHBwcGhwcHBwBAQEBARwNHBwcDxwcHBwBAQEBAQEcHBwcHBwcHBwHAQEBAQEBARwcHBwcHBwcAQEBAQEBAQEBHBwcHBwcAQEBAQEBAQEBAQEBHBwDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf4/AAD/fwAA/38AAP9/AADxTwAA4AMAAMABAADAAQAAwAMAAOADAADgBwAA4AcAAPAPAAD4HwAA/j8AAP//AAA=" rel="icon" type="image/x-icon" />
     <!-- Local asset data -->    
@@ -571,10 +571,11 @@
         //     nguidAssets.push(TalespireSlabs.GetAsset(nguid));
         // });
         var output = {};
-
+        var heightArray = [];
         for (var w = 0; w < width; w++) {
             for (var d = 0; d < depth; d++) {
-                selectedFloorGuid = GetWeightedValue(floors);
+                var selectedFloorGuid = GetWeightedValue(floors);
+                heightArray.push([w, d, TalespireSlabs.GetAsset(selectedFloorGuid)['height']]);
                 //var selectedAsset = Math.floor(random() * nguidAssets.length);
                 if (output[selectedFloorGuid] == null) {
                     output[selectedFloorGuid] = [];
@@ -592,15 +593,22 @@
         Object.entries(output).forEach(function(outputItem) {
            response.push({'nguid': outputItem[0], 'assets': outputItem[1]});
         });
-        return response;
+        return [response, heightArray];
     }
 
-    function AddAsset(nguid, width, depth, center_height, percentage) {
+    function AddAsset(nguid, width, depth, heightArray, percentage) {
         console.log("Adding asset: " + nguid + " Width: " + width + " Depth: " + depth + " Height: " + center_height + " Percentage: " + percentage);
         var asset = TalespireSlabs.GetAsset(nguid);
         var assets = [];
         for (var w = 0; w < width; w++) {
             for (var d = 0; d < depth; d++) {
+                var center_height;
+                heightArray.forEach(function (h) {
+                    if (h[0] == w && h[1] == d) {
+                        center_height = h[2] + 1.13;
+                        return;
+                    }
+                });
                 if ((Math.floor(random() * 100) + 1) > percentage) {
                     continue;
                 }
@@ -685,7 +693,9 @@
         groundsliders.forEach(function(percent) {
             floorvalues[percent.getAttribute("groundnguid")] = percent.value;
         });
-        floors = AddFloor(floorvalues, width, depth, 1);
+        var floorData = AddFloor(floorvalues, width, depth, 1);
+        var heightArray = floorData[1];
+        var floors = floorData[0];
         floors.forEach(function (floor) {
             slab.push(floor);
         });
@@ -696,7 +706,7 @@
         const sliderpercents = document.querySelectorAll("input[nguid]");
         sliderpercents.forEach(function(percent) {
             if (percent.getAttribute("custom")) {
-                var customAssetData = AddCustomAsset(percent.getAttribute("nguid"), width, depth, 1.38, percent.value);
+                var customAssetData = AddCustomAsset(percent.getAttribute("nguid"), width, depth, heightArray, percent.value);
                 for (var i = 0; i < customAssetData.length; i++) {
                     var found = false;
                     for (var s = 0; s < slab.length; s++) {
@@ -713,7 +723,7 @@
                     }
                 }
             } else {
-                slab.push(AddAsset(percent.getAttribute("nguid"), width, depth, 1.38, percent.value));
+                slab.push(AddAsset(percent.getAttribute("nguid"), width, depth, heightArray, percent.value)); // 1.38
             }
         });
 
@@ -721,6 +731,7 @@
         var results = TalespireSlabs.CreateSlab(slab);
         document.getElementById("forest").value = results;
         printResults(TalespireSlabs.DecodeSlab(results));
+        ShowMessage("Complete", 2000);
     }    
 
     function ReadSlab() {
@@ -1014,7 +1025,6 @@
             Object.entries(assetList['floors']).forEach(function(prop_asset){
                 AddAssetToGround(prop_asset[0], prop_asset[1]);
             });
-            AddAssetToGround
         }
         
         PopulateAssetList(presetAssets['mixed']);
