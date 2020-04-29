@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Forest Generator v1.5</title>
+    <title>Forest Generator v1.7</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAiPFoAAAAAAES7lQBDwJIAP8CVADzAkAA/v5kAQr+RAB48WwBEv5EAN8GSACA8WwA7wJMAV7yeAEyzlwBGvpUASb+ZAD6/kgAhO10AP76WADHCjQCT1sQAPcGTAEvDnQAkPVsAMUVeAEm7lwA4wZEAPMCSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQsYCwEBAQEBAQEBAQEBAQEBEgEBAQEBAQEBAQEBAQEBAQsBAQEBAQEBAQEBAQEBAQEZAQEBAQEBAQEBAQEXHBwBAAEcHAEBAQEBAQEJHBwcFAsVHBwcFgEBAQERHBwcHBwIHBwMHBwcAQEBDBwcHBMcHBwCHBwcBgEBAQQKHAUcHBwOHBwcEAEBAQEBGxwcHBwcGhwcHBwBAQEBARwNHBwcDxwcHBwBAQEBAQEcHBwcHBwcHBwHAQEBAQEBARwcHBwcHBwcAQEBAQEBAQEBHBwcHBwcAQEBAQEBAQEBAQEBHBwDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf4/AAD/fwAA/38AAP9/AADxTwAA4AMAAMABAADAAQAAwAMAAOADAADgBwAA4AcAAPAPAAD4HwAA/j8AAP//AAA=" rel="icon" type="image/x-icon" />
     <!-- Local asset data -->    
@@ -131,12 +131,25 @@
         }
         
         .slidecontainer {
-          width: 400px; /* Width of the outside container */
+          width: 200px; /* Width of the outside container */
         }
+
 
         .slider {
           -webkit-appearance: none;
-          width: 100%;
+          width: 200px;
+          height: 15px;
+          border-radius: 5px;
+          background: #d3d3d3;
+          outline: none;
+          opacity: 0.7;
+          -webkit-transition: .2s;
+          transition: opacity .2s;
+        }
+
+        .sliderwide {
+          -webkit-appearance: none;
+          width: 400px;
           height: 15px;
           border-radius: 5px;
           background: #d3d3d3;
@@ -275,7 +288,7 @@
           text-decoration: none;
           cursor: pointer;
         }
-        table {  
+        .assetTable table {  
             color: #333;
             font-family: Helvetica, Arial, sans-serif;
             border-collapse: 
@@ -283,27 +296,27 @@
             overflow: auto;
         }
 
-        td, th {  
+        .assetTable td, th {  
             border: 1px solid transparent; /* No more visible border */
             height: 30px; 
             transition: all 0.3s;  /* Simple transition for hover effect */
         }
 
-        th {  
+        .assetTable th {  
             background: #DFDFDF;  /* Darken header a bit */
             font-weight: bold;
             text-align: left
         }
 
-        td {  
+        .assetTable td {  
             background: #FAFAFA;
         }
 
         /* Cells in even rows (2,4,6...) are one color */        
-        tr:nth-child(even) td { background: #F1F1F1; }   
+        .assetTable tr:nth-child(even) td { background: #F1F1F1; }   
 
         /* Cells in odd rows (1,3,5...) are another (excludes header cells)  */        
-        tr:nth-child(odd) td { background: #FEFEFE; }
+        .assetTable tr:nth-child(odd) td { background: #FEFEFE; }
         .row {
           display: flex;
           margin: 20px;
@@ -356,7 +369,7 @@
     };
     var presetAssets = {
         "mixed": {
-            "floors": ["3911d10d-142b-4f33-9fea-5d3a10c53781", "01c3a210-94fb-449f-8c47-993eda3e7126"],
+            "floors": {"3911d10d-142b-4f33-9fea-5d3a10c53781": 10, "01c3a210-94fb-449f-8c47-993eda3e7126": 100},
             "randoms": [
             {
                 "nguid": "fee2bce5-fc53-4eab-bcba-0d7a73e84b49",
@@ -385,7 +398,7 @@
             ]
         },
         "sparsepine": {
-            "floors": ["3911d10d-142b-4f33-9fea-5d3a10c53781", "01c3a210-94fb-449f-8c47-993eda3e7126"],
+            "floors": {"3911d10d-142b-4f33-9fea-5d3a10c53781": 20, "01c3a210-94fb-449f-8c47-993eda3e7126": 100},
             "randoms": [
             {
                 "nguid": "fee2bce5-fc53-4eab-bcba-0d7a73e84b49",
@@ -413,7 +426,7 @@
             }
         ]},
         "heavypine": {
-            "floors": ["01c3a210-94fb-449f-8c47-993eda3e7126"],
+            "floors": {"01c3a210-94fb-449f-8c47-993eda3e7126": 100},
             "randoms": [
             {
                 "nguid": "fee2bce5-fc53-4eab-bcba-0d7a73e84b49",
@@ -441,7 +454,7 @@
             }
         ]},
         "sparsedead": {
-            "floors": ["01c3a210-94fb-449f-8c47-993eda3e7126", "0582fb0c-9fd0-4355-9bf8-821027ecc74d", "3911d10d-142b-4f33-9fea-5d3a10c53781", "3911d10d-142b-4f33-9fea-5d3a10c53781"],
+            "floors": {"0582fb0c-9fd0-4355-9bf8-821027ecc74d": 20, "3911d10d-142b-4f33-9fea-5d3a10c53781": 30, "3911d10d-142b-4f33-9fea-5d3a10c53781": 30, "01c3a210-94fb-449f-8c47-993eda3e7126": 100},
             "randoms": [
             {
                 "nguid": "fee2bce5-fc53-4eab-bcba-0d7a73e84b49",
@@ -469,7 +482,7 @@
             }
         ]},
         "heavydead": {
-            "floors": ["01c3a210-94fb-449f-8c47-993eda3e7126", "0582fb0c-9fd0-4355-9bf8-821027ecc74d", "3911d10d-142b-4f33-9fea-5d3a10c53781", "3911d10d-142b-4f33-9fea-5d3a10c53781"],
+            "floors": {"0582fb0c-9fd0-4355-9bf8-821027ecc74d": 30, "3911d10d-142b-4f33-9fea-5d3a10c53781": 20, "3911d10d-142b-4f33-9fea-5d3a10c53781": 20, "01c3a210-94fb-449f-8c47-993eda3e7126": 100},
             "randoms": [
             {
                 "nguid": "fee2bce5-fc53-4eab-bcba-0d7a73e84b49",
@@ -497,6 +510,16 @@
             }
         ]}
     };
+
+    function GetWeightedValue(weightedDict) {
+        weightedArr = [];
+        Object.entries(weightedDict).forEach(function (val) {
+            for (let j = 0; j < val[1]; ++j) {
+                weightedArr.push(val[0]);
+            }
+        });
+        return weightedArr[Math.floor(Math.random() * weightedArr.length)];
+    }
 
     function ShowError(errorMessage, timeout=3000) {
         var x = document.getElementById("snackbar");
@@ -540,22 +563,24 @@
         return x - Math.floor(x);
     }
 
-    function AddFloor(nguids, width, depth, center_height) {
+    function AddFloor(floors, width, depth, center_height) {
         //console.log("Adding asset: " + nguid + " Width: " + width + " Depth: " + depth + " Height: " + center_height + " Percentage: " + percentage);
         
-        var nguidAssets = [];
-        nguids.forEach(function(nguid) {
-            nguidAssets.push(TalespireSlabs.GetAsset(nguid));
-        });
+        // var nguidAssets = [];
+        // nguids.forEach(function(nguid) {
+        //     nguidAssets.push(TalespireSlabs.GetAsset(nguid));
+        // });
         var output = {};
-
+        var heightArray = [];
         for (var w = 0; w < width; w++) {
             for (var d = 0; d < depth; d++) {
-                var selectedAsset = Math.floor(random() * nguidAssets.length);
-                if (output[nguids[selectedAsset]] == null) {
-                    output[nguids[selectedAsset]] = [];
+                var selectedFloorGuid = GetWeightedValue(floors);
+                heightArray.push([w, d, TalespireSlabs.GetAsset(selectedFloorGuid)['height']]);
+                //var selectedAsset = Math.floor(random() * nguidAssets.length);
+                if (output[selectedFloorGuid] == null) {
+                    output[selectedFloorGuid] = [];
                 }
-                output[nguids[selectedAsset]].push({'rotation': Math.floor(Math.random() * 3) * 4,
+                output[selectedFloorGuid].push({'rotation': Math.floor(Math.random() * 3) * 4,
                     'bounds': 
                     {
                         'center': {'x': w*2, 'y': center_height, 'z': d*2},
@@ -568,15 +593,22 @@
         Object.entries(output).forEach(function(outputItem) {
            response.push({'nguid': outputItem[0], 'assets': outputItem[1]});
         });
-        return response;
+        return [response, heightArray];
     }
 
-    function AddAsset(nguid, width, depth, center_height, percentage) {
+    function AddAsset(nguid, width, depth, heightArray, percentage) {
         console.log("Adding asset: " + nguid + " Width: " + width + " Depth: " + depth + " Height: " + center_height + " Percentage: " + percentage);
         var asset = TalespireSlabs.GetAsset(nguid);
         var assets = [];
         for (var w = 0; w < width; w++) {
             for (var d = 0; d < depth; d++) {
+                var center_height;
+                heightArray.forEach(function (h) {
+                    if (h[0] == w && h[1] == d) {
+                        center_height = h[2] + 1.13;
+                        return;
+                    }
+                });
                 if ((Math.floor(random() * 100) + 1) > percentage) {
                     continue;
                 }
@@ -656,7 +688,14 @@
         var width = document.getElementById("widthslider").value;
         var depth = document.getElementById("depthslider").value;
 
-        floors = AddFloor(presetAssets[document.getElementById("presets").value]['floors'], width, depth, 1);
+        const groundsliders = document.querySelectorAll("input[groundnguid]");
+        var floorvalues = {};
+        groundsliders.forEach(function(percent) {
+            floorvalues[percent.getAttribute("groundnguid")] = percent.value;
+        });
+        var floorData = AddFloor(floorvalues, width, depth, 1);
+        var heightArray = floorData[1];
+        var floors = floorData[0];
         floors.forEach(function (floor) {
             slab.push(floor);
         });
@@ -667,7 +706,7 @@
         const sliderpercents = document.querySelectorAll("input[nguid]");
         sliderpercents.forEach(function(percent) {
             if (percent.getAttribute("custom")) {
-                var customAssetData = AddCustomAsset(percent.getAttribute("nguid"), width, depth, 1.38, percent.value);
+                var customAssetData = AddCustomAsset(percent.getAttribute("nguid"), width, depth, heightArray, percent.value);
                 for (var i = 0; i < customAssetData.length; i++) {
                     var found = false;
                     for (var s = 0; s < slab.length; s++) {
@@ -684,7 +723,7 @@
                     }
                 }
             } else {
-                slab.push(AddAsset(percent.getAttribute("nguid"), width, depth, 1.38, percent.value));
+                slab.push(AddAsset(percent.getAttribute("nguid"), width, depth, heightArray, percent.value)); // 1.38
             }
         });
 
@@ -692,6 +731,7 @@
         var results = TalespireSlabs.CreateSlab(slab);
         document.getElementById("forest").value = results;
         printResults(TalespireSlabs.DecodeSlab(results));
+        ShowMessage("Complete", 2000);
     }    
 
     function ReadSlab() {
@@ -809,14 +849,26 @@
                   <option value="heavydead">Heavy Dead Forest</option>
                 </select></div>
                 <h3>Slab Size</h3>
+                <table>
+                    <tr>
+                        <th><span class="sliderheader">Slab Width: <strong><span id="slabwidth"></span></strong></span></th>
+                        <th><span class="sliderheader">Slab Depth: <strong><span id="slabdepth"></span></strong></span></th>
+                    </tr>
+                    <tr>
+                        <td><input type="range" min="1" max="50" value="5" class="slider" id="widthslider"></td>
+                        <td><input type="range" min="1" max="50" value="5" class="slider" id="depthslider"></td>
+                    </tr>
+                </table>
 
-                <div class="slidecontainer">
-                  <p class="sliderheader">Slab Width: <strong><span id="slabwidth"></span></strong></p><input type="range" min="1" max="50" value="5" class="slider" id="widthslider">
-                </div>
-                <div class="slidecontainer">
-                  <p class="sliderheader">Slab Depth: <strong><span id="slabdepth"></span></strong></p><input type="range" min="1" max="50" value="5" class="slider" id="depthslider">
-                </div>
+                <p><button onClick='ShowAssetWindow(true);' class="addbtn"><i class="fa fa-plus"> Add Ground</i></button></p>
+                <h3 style='margin-top: 40px;'>Ground</h3>
+                <span id="groundsliders"></span>
+                <br>
 
+                <span style="clear: both"></span>
+
+                <br>
+                <button onClick='ShowAssetWindow(false);' class="addbtn"><i class="fa fa-plus"> Add Asset</i></button>
                 <h3>Randomness</h3>
                 <span id="randomsliders"></span>
                 <div id="AssetSelect" class="modal">
@@ -826,7 +878,7 @@
                     <div class="modal-body">
                         <div onclick='AssetSelect.style.display = "none";' class="modalClose"><i class="fa fa-close"></i></div>
                         <h3 style="margin-top: -25px">Asset Selection</h3>
-                        <input type="text" id="assetSearch" onkeyup="searchAssets()" style="font-size: 100%;font-family:Candara, Calibri, Segoe, FontAwesome" placeholder="&#xf002; Search"><label><input onclick="SwapAssets()" style="margin-left: 20px;" type="checkbox" id="custom"><span style="font-size: 80%;">Show Custom Assets</span></label>
+                        <input type="text" id="assetSearch" onkeyup="searchAssets()" style="font-size: 100%;font-family:Candara, Calibri, Segoe, FontAwesome" placeholder="&#xf002; Search"><label id="swapassets"><input onclick="SwapAssets()" style="margin-left: 20px;" type="checkbox" id="custom"><span style="font-size: 80%;">Show Custom Assets</span></label>
                         <div style="width: 812px;" id="assetTable"></div>
 
                     
@@ -836,7 +888,7 @@
                   </div>
 
                 </div>
-                <button onClick='AssetSelect.style.display = "block";' class="addbtn"><i class="fa fa-plus"> Add Asset</i></button>
+                
             </div>
             <div class="column">
                 <h3 style="margin-left: 40px">Decoded Results</h3>
@@ -847,6 +899,19 @@
     <span style="float: none"></span>
     <div id="snackbar"></div>
     <script>
+        var assetWindowGround = false;
+        function ShowAssetWindow(ground=false) {
+            assetWindowGround = ground;
+            document.getElementById('AssetSelect').style.display = "block";
+            if (ground) {
+                document.getElementById("custom").checked = false;
+                SwapAssets();
+                document.getElementById('swapassets').style.display = "none";
+            } else {
+                document.getElementById('swapassets').style.display = "inline";
+            }
+        }
+
         document.querySelector(".modal").addEventListener("click", function(e) {
             if (e.target.className == "modal") {
                 document.getElementById('AssetSelect').style.display = "none";
@@ -867,7 +932,7 @@
             sliderdiv.style.width = "400px";
 
             if (custom) {
-                sliderdiv.innerHTML = '<p class="sliderheader"><button onClick="this.parentNode.parentNode.innerHTML=\'\';" class="btn" id="' + nguid + 'removebtn"><i class="fa fa-close"></i></button> Custom - ' + nguid.substring(nguid.indexOf('-') + 1) + ': <strong><span id="' + nguid + 'percent"></span>%</strong> </p><input type="range" min="0" max="100" nguid="' + nguid + '" custom="true" value="' + defaultpercent + '" class="slider" id="' + nguid + 'slider">';
+                sliderdiv.innerHTML = '<p class="sliderheader"><button onClick="this.parentNode.parentNode.innerHTML=\'\';" class="btn" id="' + nguid + 'removebtn"><i class="fa fa-close"></i></button> Custom - ' + nguid.substring(nguid.indexOf('-') + 1) + ': <strong><span id="' + nguid + 'percent"></span>%</strong> </p><input type="range" min="0" max="100" nguid="' + nguid + '" custom="true" value="' + defaultpercent + '" class="sliderwide" id="' + nguid + 'slider">';
                 document.getElementById("randomsliders").appendChild(sliderdiv);
                 var randslider = document.getElementById(nguid + "slider");
                 document.getElementById(nguid + "percent").innerHTML = randslider.value;
@@ -881,7 +946,7 @@
 
                 var asset = TalespireSlabs.GetAsset(nguid);
 
-                sliderdiv.innerHTML = '<p class="sliderheader"><button onClick="this.parentNode.parentNode.innerHTML=\'\';" class="btn" id="' + nguid + 'removebtn"><i class="fa fa-close"></i></button> ' + asset['name'] + ': <strong><span id="' + nguid + 'percent"></span>%</strong> </p><input type="range" min="0" max="100" nguid="' + nguid + '" value="' + defaultpercent + '" class="slider" id="' + nguid + 'slider">';
+                sliderdiv.innerHTML = '<p class="sliderheader"><button onClick="this.parentNode.parentNode.innerHTML=\'\';" class="btn" id="' + nguid + 'removebtn"><i class="fa fa-close"></i></button> ' + asset['name'] + ': <strong><span id="' + nguid + 'percent"></span>%</strong> </p><input type="range" min="0" max="100" nguid="' + nguid + '" value="' + defaultpercent + '" class="sliderwide" id="' + nguid + 'slider">';
                 document.getElementById("randomsliders").appendChild(sliderdiv);
                 var randslider = document.getElementById(nguid + "slider");
                 document.getElementById(nguid + "percent").innerHTML = randslider.value;
@@ -891,18 +956,35 @@
             }
         }
 
+        function AddAssetToGround(nguid, defaultpercent) {
+            var sliderdiv = document.createElement("div");
+            sliderdiv.style.width = "400px";
+
+            nguid = nguid.trim();
+
+            var asset = TalespireSlabs.GetAsset(nguid);
+
+            sliderdiv.innerHTML = '<p class="sliderheader"><button onClick="if (document.querySelectorAll(\'input[groundnguid]\').length > 1) {this.parentNode.parentNode.innerHTML=\'\';} else {ShowError(\'Must have at least 1 ground tile\');} " class="btn" id="' + nguid + 'removebtn"><i class="fa fa-close"></i></button> ' + asset['name'] + ': <strong><span id="' + nguid + 'percent"></span>%</strong> </p><input type="range" min="1" max="100" groundnguid="' + nguid + '" value="' + defaultpercent + '" class="sliderwide" id="' + nguid + 'groundslider">';
+            document.getElementById("groundsliders").appendChild(sliderdiv);
+            var randslider = document.getElementById(nguid + "groundslider");
+            document.getElementById(nguid + "percent").innerHTML = randslider.value;
+            randslider.oninput = function() {
+                document.getElementById(nguid + "percent").innerHTML = this.value;
+            }
+        }
+
         function PopulateModalAssets() {
-            var tmpTable = '<span id="standardassets" style="display: block;"><table style="margin-top: 20px; width: 810px" cellspacing="0" cellpadding="0" border="0"><tr></tr><tr><td style=" border: 1px solid #AAA" colspan="3"><div style="height: 400px; width: 810px; overflow-y:none; overflow-y:auto;"><table width="790px" align="left" id="assetTable" cellspacing="0" cellpadding="0" border="1">';
+            var tmpTable = '<span id="standardassets" style="display: block;"><table class="assetTable" style="margin-top: 20px; width: 810px" cellspacing="0" cellpadding="0" border="0"><tr></tr><tr><td style=" border: 1px solid #AAA" colspan="3"><div style="height: 400px; width: 810px; overflow-y:none; overflow-y:auto;"><table  width="790px" align="left" id="assetTable" cellspacing="0" cellpadding="0" border="1">';
             var assets = TalespireSlabs.GetAllAssets();
 
             tmpTable += '<tr><th>Name</th><th>GUID</th><th></th></tr>';
 
             Object.entries(assets).forEach(function(asset) {
-                tmpTable += '<tr><td>' + asset[1]["name"] + '</td><td>' + asset[0] + '</td><td><button onClick="AddAssetToList(\'' + asset[0] + '\', 10);" class="addbtn"><i class="fa fa-plus"> Select</i></button></td></tr>';
+                tmpTable += '<tr><td>' + asset[1]["name"] + '</td><td>' + asset[0] + '</td><td><button onClick="if (assetWindowGround) {AddAssetToGround(\'' + asset[0] + '\', 10); } else {AddAssetToList(\'' + asset[0] + '\', 10);}" class="addbtn"><i class="fa fa-plus"> Select</i></button></td></tr>';
             });
             tmpTable += "</table></div></td></tr></table></span>";
 
-            tmpTable += '<span id="customassets" style="display: none"><table style="margin-top: 20px; width: 810px" cellspacing="0" cellpadding="0" border="0"><tr></tr><tr><td style=" border: 1px solid #AAA" colspan="3"><div style="height: 400px; width: 810px; overflow-y:none; overflow-y:auto;"><table width="790px" align="left" id="assetTable" cellspacing="0" cellpadding="0" border="1">';
+            tmpTable += '<span id="customassets" style="display: none"><table class="assetTable" style="margin-top: 20px; width: 810px" cellspacing="0" cellpadding="0" border="0"><tr></tr><tr><td style=" border: 1px solid #AAA" colspan="3"><div style="height: 400px; width: 810px; overflow-y:none; overflow-y:auto;"><table class="assetTable" width="790px" align="left" id="assetTable" cellspacing="0" cellpadding="0" border="1">';
             
             tmpTable += '<tr><th>Name</th><th></th><th></th></tr>';
 
@@ -931,6 +1013,7 @@
         }
 
         function PopulateAssetList(assetList) {
+            document.getElementById("groundsliders").innerHTML = "";
             document.getElementById("randomsliders").innerHTML = "";
             assetList['randoms'].forEach(function(prop_asset){
                 if (prop_asset['nguid'].startsWith('builtin')) {
@@ -938,6 +1021,9 @@
                 } else {
                     AddAssetToList(prop_asset['nguid'], prop_asset['defaultpercent']);
                 }
+            });
+            Object.entries(assetList['floors']).forEach(function(prop_asset){
+                AddAssetToGround(prop_asset[0], prop_asset[1]);
             });
         }
         

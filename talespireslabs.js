@@ -283,7 +283,7 @@ var TalespireSlabs = (function () {
         for (i = 0; i < decodedAssets.length; i++) {
             var asset = publicAPIs.GetAsset(decodedAssets[i]["nguid"]);
             if (asset) {
-                results += "<p><b>" + asset["name"] + "</b> NGuid: " + decodedAssets[i]["nguid"] + "</p>";
+                results += "<p><b>" + asset["name"] + "</b><br> NGuid: " + decodedAssets[i]["nguid"] + "</p>";
             } else {
                 results += "<p><b>NGuid:</b> " + decodedAssets[i]["nguid"] + "</p>";
             }
