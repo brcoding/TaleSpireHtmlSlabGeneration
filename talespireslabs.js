@@ -104,7 +104,7 @@ var TalespireSlabs = (function () {
         layouts.forEach(function(layout){ 
             // Write asset locations
             layout['assets'].forEach(function(asset) {
-                //console.log(bufPtr, asset['bounds']['center']['x']);
+                //console.log(asset);
                 bufferDataView.setFloat32(bufPtr, asset['bounds']['center']['x'], true);
                 bufPtr += 4;
                 bufferDataView.setFloat32(bufPtr, asset['bounds']['center']['y'], true);
